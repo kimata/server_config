@@ -1,0 +1,134 @@
+- hosts: dhcp
+  vars_files: 
+    - config.yml
+  sudo: yes
+
+  tasks:
+    - name: Generate Locales
+      locale_gen:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - en_US.UTF-8
+        - ja_JP.UTF-8
+
+    - name: Install Packages - client
+      apt:
+        update-cache=yes
+      apt: 
+        pkg={{ item }}
+        state=present
+      with_items:
+        - emacs24-nox
+        - tmux
+        - git
+        - zsh
+        - lsb-release
+
+    - name: Install Packages - server
+      apt:
+        update-cache=yes
+      apt: 
+        pkg={{ item }}
+        state=present
+      with_items:
+        - isc-dhcp-server
+        - bind9
+        - ntp
+
+    - name: Setting Network
+      template:
+        src=templates/network/interfaces.dhcp.j2 dest=/etc/network/interfaces
+
+    - name: Setting Sudo
+      template:
+        src=templates/sudo/sudoers.j2 dest=/etc/sudoers
+        owner=root
+        group=root
+        mode=0440
+
+    - name: Setting SSHD
+      template:
+        src=templates/ssh/sshd_config.j2 dest=/etc/ssh/sshd_config
+      notify:
+        restart sshd
+
+    - name: Setting DHCPD - copy configuration
+      template:
+        src=templates/dhcp/dhcpd.conf.j2 dest=/etc/dhcp/dhcpd.conf
+      notify:
+        restart dhcpd
+
+    - name: Setting BIND - copy configuration
+      template:
+        src=templates/bind/{{ item.name }}.j2 dest=/etc/bind/{{ item.name }}
+        owner={{ item.owner }}
+        group={{ item.group }}
+      with_items:
+        - { name: named.conf, 		owner: root, group: bind }
+        - { name: named.conf.options, 	owner: root, group: bind }
+        - { name: named.conf.zones,	owner: root, group: bind }
+        - { name: db.127,		owner: root, group: bind }
+        - { name: db.local,		owner: root, group: bind }
+      notify: restart bind
+
+    - stat: path=/var/cache/bind/db.{{ network.domain }}-internal
+      register: bind_local_db
+
+    - name: Setting BIND - copy local db
+      template:
+        src=templates/bind/{{ item }}.j2 dest=/var/cache/bind/{{ item }}
+        owner=bind
+        group=bind
+      with_items:
+        - db.{{ network.zone }}
+        - db.{{ network.domain }}-internal
+      when: bind_local_db.stat.md5 is not defined
+      notify: restart bind
+
+    - name: Setting BIND - make directory
+      file:
+        path=/var/log/named state=directory
+        owner=bind
+        group=bind
+      notify: restart bind
+
+    - name: Setting NTPD
+      template:
+        src=templates/ntp/ntp.conf.j2 dest=/etc/ntp.conf
+        owner=ntp
+        group=ntp
+      notify: restart ntp
+
+  handlers:
+    - name: restart sshd
+      service: name=ssh state=restarted
+
+    - name: restart dhcpd
+      service: name=isc-dhcp-server state=restarted
+
+    - name: restart bind
+      service: name=bind9 state=restarted
+
+    - name: restart ntp
+      service: name=ntp state=restarted
+
+
+
+
+
+
+#       template: src=templates/bind/db.127.j2 dest=/etc/bind/db.127
+         
+# db.127.j2        db..j2  named.conf.j2          named.conf.zones.j2
+# .j2  db.local.j2                      named.conf.options.j2
+
+
+# template '/etc/bind/db.127' do
+#   source    'bind/db.127.erb'
+#   owner     'bind'
+#   group     'bind'
+#   mode      '0644'
+#   notifies  :restart, 'service[bind]'
+# end
+
