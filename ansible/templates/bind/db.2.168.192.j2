@@ -11,4 +11,6 @@ $TTL 86400  ; 1 day
 )
 
                 IN NS       ns.{{ network.domain }}.
-1               PTR         {{ ansible_hostname  }}.{{ network.domain }}.
+{{ network.gateway.split('.')[-1] }}               PTR         router.{{ network.domain }}.
+{{ network.dhcp.split('.')[-1] }}               PTR         {{ ansible_hostname  }}.{{ network.domain }}.
+
