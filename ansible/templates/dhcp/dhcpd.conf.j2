@@ -7,8 +7,8 @@ option              time-offset 32400;
 option              tz-posix-string code 100 = string;
 option              tz-posix-string "JST-9";
 
-default-lease-time  3600;
-max-lease-time      10800;
+default-lease-time  600;
+max-lease-time      3600;
 
 ddns-updates        on;
 ddns-update-style   interim;
@@ -42,7 +42,9 @@ subnet {{ network.subnet }} netmask {{ network.netmask }} {
 host {{ host.name }} {
    hardware         ethernet {{ host.mac }};
    fixed-address    {{ host.addr }};
+{% if (host.def_name is defined and host.def_name) %}
    ddns-hostname    "{{ host.name }}";
+{% endif %}
 }
 {% endfor %}
 

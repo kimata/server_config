@@ -21,12 +21,6 @@ options {
     forwarders          { 129.250.35.250; 129.250.35.251; };
     forward             only;
 
-    root-delegation-only;
-
-    dnssec-enable       no;
-    dnssec-validation   no;
-    dnssec-lookaside    no;
-
     auth-nxdomain       no;
 };
 
@@ -58,8 +52,8 @@ logging {
         print-severity yes;
         print-time     yes;
     };
-    category lame-servers   { null; };
     category default        { default_log; };
     category update         { update_log; };
     category security       { security_log; };
+    category lame-servers   { null; };
 };

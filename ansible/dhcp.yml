@@ -35,6 +35,7 @@
         - isc-dhcp-server
         - bind9
         - ntp
+        - postfix
 
     - name: Setting Network
       template:
@@ -100,6 +101,14 @@
         group=ntp
       notify: restart ntp
 
+    - name: Setting Rsyslog
+      template:
+        src=templates/rsyslog/{{ item.name }}.j2 dest={{ item.path }}/{{ item.name }}
+      with_items:
+        - { name: rsyslog.conf, 	path: /etc }
+        - { name: 10-equipment.conf, 	path: /etc/rsyslog.d }
+      notify: restart rsyslog
+
   handlers:
     - name: restart sshd
       service: name=ssh state=restarted
@@ -113,6 +122,8 @@
     - name: restart ntp
       service: name=ntp state=restarted
 
+    - name: restart rsyslog
+      service: name=rsyslog state=restarted
 
 
 

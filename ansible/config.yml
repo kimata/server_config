@@ -16,24 +16,24 @@ user:
 
 device:
   # ネットワーク機器
-  - name: living-switch
+  - name: switch-living
     mac: 04:da:d2:12:04:c8
     addr: 192.168.2.10
 
-  - name: desk-switch
+  - name: switch-desk
     mac: 04:da:d2:12:05:cc
     addr: 192.168.2.11
 
-  - name: wifi-ap-wireless
-    mac: a4:12:42:a1:52:16
+  - name: wifi-irish
+    mac:  00:a0:de:9e:23:78
     addr: 192.168.2.12
 
-  - name: wifi-ap-wired
-    mac: a4:12:42:a1:52:14
+  - name: wifi-aterm-bridge
+    mac: a4:12:42:a1:52:24
     addr: 192.168.2.13
 
-  - name: wifi-bridge
-    mac: a4:12:42:a1:52:24
+  - name: wifi-aterm-converter
+    mac: a4:12:42:a1:52:14
     addr: 192.168.2.14
 
   # サーバー
@@ -56,20 +56,24 @@ device:
   - name: columbia-ctrl
     mac: 00:9c:02:9d:fe:5a
     addr: 192.168.2.30
+    def_name: true
 
   - name: costarica-ctrl 
     mac: 00:9c:02:ac:c6:da
     addr: 192.168.2.31
+    def_name: true
 
   - name: ethiopia-ctrl
     mac: d8:d3:85:af:a1:f7
     addr: 192.168.2.32
+    def_name: true
 
   - name: guatemala-ctrl
     mac: 9c:b6:54:09:3f:4a
     addr: 192.168.2.33
+    def_name: true
 
-  # ネットワーク機器
+  # プリンタ
   - name: printer-laser-color
     mac: 70:18:8b:4d:36:20
     addr: 192.168.2.40
@@ -77,6 +81,10 @@ device:
   - name: printer-laser
     mac: 00:22:58:1d:ce:51
     addr: 192.168.2.41
+
+  - name: printer-tepra
+    mac: c0:d9:62:ee:45:30 
+    addr: 192.168.2.42
 
   # パソコン
   - name: brazil
@@ -88,12 +96,16 @@ device:
     addr: 192.168.2.52
 
   # モバイル
+  - name: iPhone
+    mac: 64:a5:c3:d6:a9:17
+    addr: 192.168.2.60
 
-
-  # IoT
+  # メディアプレーヤー
   - name: squeezebox
     mac: 00:04:20:23:3d:d5
-    addr: 192.168.2.60
+    addr: 192.168.2.70
+
+  # IoT
 
 
 
