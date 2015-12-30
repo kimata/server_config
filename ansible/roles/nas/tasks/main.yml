@@ -1,0 +1,17 @@
+- name: Create mount point
+  file:
+    path={{ item }} state=directory
+  with_items:
+    - /storage
+    - /backup
+
+- name: Setting mount
+  template:
+    src=mount/fstab.j2 dest=/etc/fstab
+  notify:
+    reload mount
+
+# Local Variables:
+# mode: yaml
+# tab-width: 4
+# End:
