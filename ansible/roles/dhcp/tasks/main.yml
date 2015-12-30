@@ -5,6 +5,10 @@
   with_items:
     - isc-dhcp-server
 
+- name: Setting Network
+  template:
+    src=network/interfaces.dhcp.j2 dest=/etc/network/interfaces
+
 - name: Setting DHCPD - copy configuration
   template:
     src=dhcp/dhcpd.conf.j2 dest=/etc/dhcp/dhcpd.conf

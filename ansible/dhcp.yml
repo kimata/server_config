@@ -32,13 +32,8 @@
         pkg={{ item }}
         state=present
       with_items:
-        - isc-dhcp-server
-        - bind9
         - postfix
 
-    - name: Setting Network
-      template:
-        src=templates/network/interfaces.dhcp.j2 dest=/etc/network/interfaces
 
   handlers:
 
