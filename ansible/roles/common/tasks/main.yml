@@ -48,7 +48,7 @@
     src=ntp/ntp.conf-server.j2 dest=/etc/ntp.conf
     owner=ntp
     group=ntp
-  when: ntp_server
+  when: ntp_server is defined
   notify: restart ntp
 
 - name: Setting NTPD client
@@ -56,7 +56,7 @@
     src=ntp/ntp.conf-client.j2 dest=/etc/ntp.conf
     owner=ntp
     group=ntp
-  when: not ntp_server
+  when: ntp_server is not defined
   notify: restart ntp
 
 # Local Variables:

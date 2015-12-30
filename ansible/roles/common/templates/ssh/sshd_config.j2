@@ -9,10 +9,10 @@ ServerKeyBits                   768
 SyslogFacility                  AUTH
 LogLevel                        INFO
 
-LoginGraceTime 		        60s
-PermitRootLogin			no
-StrictModes			yes
-MaxAuthTries			2
+LoginGraceTime                  60s
+PermitRootLogin                 no
+StrictModes                     yes
+MaxAuthTries                    2
 
 AllowUsers                      {{ user | join(' ') }}
 
@@ -48,3 +48,8 @@ Compression                     yes
 MaxStartups                     3
 
 Subsystem                       sftp internal-sftp
+
+# Local Variables:
+# mode: yaml
+# tab-width: 4
+# End:

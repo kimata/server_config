@@ -14,3 +14,7 @@ $TTL 86400  ; 1 day
 {{ network.gateway.split('.')[-1] }}               PTR         router.{{ network.domain }}.
 {{ network.dhcp.split('.')[-1] }}               PTR         {{ ansible_hostname  }}.{{ network.domain }}.
 
+; Local Variables:
+; mode: yaml
+; tab-width: 4
+; End:

@@ -1,18 +1,18 @@
-- hosts: dhcp
-  vars:
-    ntp_server: true
-
+- hosts: nas
   vars_files: 
     - host_config.yml
+
   sudo: yes
 
   roles:
     - common
-    - dns
-    - dhcp
+    - nas
+
+  handlers:
+
 
   tasks:
-    - name: Install Packages - client
+    - name: Install Packages
       apt:
         update-cache=yes
       apt: 
@@ -24,24 +24,6 @@
         - git
         - zsh
         - lsb-release
-
-    - name: Install Packages - server
-      apt:
-        update-cache=yes
-      apt: 
-        pkg={{ item }}
-        state=present
-      with_items:
-        - isc-dhcp-server
-        - bind9
-        - postfix
-
-    - name: Setting Network
-      template:
-        src=templates/network/interfaces.dhcp.j2 dest=/etc/network/interfaces
-
-  handlers:
-
 
 
 

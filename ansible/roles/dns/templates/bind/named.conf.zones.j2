@@ -4,25 +4,30 @@ view "internal" {
     match-clients { local-area; };
 
     zone "." IN {
-        type		hint;
-        file        	"/etc/bind/db.root";
+        type            hint;
+        file            "/etc/bind/db.root";
     };
     zone "localhost" IN {
-        type         	master;
-        file         	"/etc/bind/db.local";
+        type            master;
+        file            "/etc/bind/db.local";
     };
     zone "127.in-addr.arpa" IN {
-        type         	master;
-        file         	"/etc/bind/db.127";
+        type            master;
+        file            "/etc/bind/db.127";
     };
     zone "{{ network.domain }}" IN {
-        type         	master;
+        type            master;
         file           "/var/cache/bind/db.{{ network.domain }}-internal";
-        allow-update 	{ localhost; };
+        allow-update    { localhost; };
     };
     zone "{{ network.zone }}.in-addr.arpa" IN {
-        type         	master;
-        allow-update 	{ localhost; };
-        file         	"/var/cache/bind/db.{{ network.zone }}";
+        type            master;
+        allow-update    { localhost; };
+        file            "/var/cache/bind/db.{{ network.zone }}";
     };
 };
+
+# Local Variables:
+# mode: yaml
+#tab-width: 4
+# End:
