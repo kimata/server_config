@@ -1,3 +1,10 @@
+- name: Install Packages
+  apt:
+    pkg={{ item }}
+    state=present
+  with_items:
+    - ntp
+
 - name: Generate Locales
   locale_gen:
     name: "{{ item }}"
@@ -35,7 +42,23 @@
     - { name: rsyslog.conf, 	    path: /etc }
     - { name: 10-equipment.conf,  path: /etc/rsyslog.d }
   notify: restart rsyslog
-    
+
+- name: Setting NTPD server
+  template:
+    src=ntp/ntp.conf-server.j2 dest=/etc/ntp.conf
+    owner=ntp
+    group=ntp
+  when: ntp_server
+  notify: restart ntp
+
+- name: Setting NTPD client
+  template:
+    src=ntp/ntp.conf-client.j2 dest=/etc/ntp.conf
+    owner=ntp
+    group=ntp
+  when: not ntp_server
+  notify: restart ntp
+
 # Local Variables:
 # mode: yaml
 # tab-width: 4

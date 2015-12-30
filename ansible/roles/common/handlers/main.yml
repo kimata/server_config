@@ -1,12 +1,15 @@
-  - name: reload sysctl
-    shell: sysctl -p
+- name: reload sysctl
+  shell: sysctl -p
 
-  - name: restart sshd
-    service: name=ssh state=restarted
+- name: restart sshd
+  service: name=ssh state=restarted
 
-  - name: restart rsyslog
-    service: name=rsyslog state=restarted
-    
+- name: restart rsyslog
+  service: name=rsyslog state=restarted
+  
+- name: restart ntp
+  service: name=ntp state=restarted
+  
 # Local Variables:
 # mode: yaml
 # tab-width: 4

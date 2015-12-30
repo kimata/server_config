@@ -1,0 +1,17 @@
+- name: Install Packages
+  apt: 
+    pkg={{ item }}
+    state=present
+  with_items:
+    - isc-dhcp-server
+
+- name: Setting DHCPD - copy configuration
+  template:
+    src=dhcp/dhcpd.conf.j2 dest=/etc/dhcp/dhcpd.conf
+  notify:
+    restart dhcpd
+
+# Local Variables:
+# mode: yaml
+# tab-width: 4
+# End:

@@ -1,0 +1,45 @@
+- name: Install Packages
+  apt: 
+    pkg={{ item }}
+    state=present
+  with_items:
+    - bind9 
+
+- stat: path=/var/cache/bind/db.{{ network.domain }}-internal
+  register: bind_local_db
+
+- name: Setting BIND - copy configuration
+  template:
+    src=bind/{{ item.name }}.j2 dest=/etc/bind/{{ item.name }}
+    owner={{ item.owner }}
+    group={{ item.group }}
+  with_items:
+    - { name: named.conf,           owner: root, group: bind }
+    - { name: named.conf.options,   owner: root, group: bind }
+    - { name: named.conf.zones,     owner: root, group: bind }
+    - { name: db.127,               owner: root, group: bind }
+    - { name: db.local,             owner: root, group: bind }
+  notify: restart bind
+
+- name: Setting BIND - copy local db
+  template:
+    src=bind/{{ item }}.j2 dest=/var/cache/bind/{{ item }}
+    owner=bind
+    group=bind
+  with_items:
+    - db.{{ network.zone }}
+    - db.{{ network.domain }}-internal
+  when: bind_local_db.stat.md5 is not defined
+  notify: restart bind
+
+- name: Setting BIND - make directory
+  file:
+    path=/var/log/named state=directory
+    owner=bind
+    group=bind
+  notify: restart bind
+
+# Local Variables:
+# mode: yaml
+# tab-width: 4
+# End:
