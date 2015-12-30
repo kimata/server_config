@@ -1,17 +1,12 @@
 - hosts: dhcp
   vars_files: 
-    - config.yml
+    - host_config.yml
   sudo: yes
 
-  tasks:
-    - name: Generate Locales
-      locale_gen:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - en_US.UTF-8
-        - ja_JP.UTF-8
+  roles:
+    - common
 
+  tasks:
     - name: Install Packages - client
       apt:
         update-cache=yes
@@ -41,18 +36,6 @@
       template:
         src=templates/network/interfaces.dhcp.j2 dest=/etc/network/interfaces
 
-    - name: Setting Sudo
-      template:
-        src=templates/sudo/sudoers.j2 dest=/etc/sudoers
-        owner=root
-        group=root
-        mode=0440
-
-    - name: Setting SSHD
-      template:
-        src=templates/ssh/sshd_config.j2 dest=/etc/ssh/sshd_config
-      notify:
-        restart sshd
 
     - name: Setting DHCPD - copy configuration
       template:
@@ -101,17 +84,7 @@
         group=ntp
       notify: restart ntp
 
-    - name: Setting Rsyslog
-      template:
-        src=templates/rsyslog/{{ item.name }}.j2 dest={{ item.path }}/{{ item.name }}
-      with_items:
-        - { name: rsyslog.conf, 	path: /etc }
-        - { name: 10-equipment.conf, 	path: /etc/rsyslog.d }
-      notify: restart rsyslog
-
   handlers:
-    - name: restart sshd
-      service: name=ssh state=restarted
 
     - name: restart dhcpd
       service: name=isc-dhcp-server state=restarted
@@ -122,24 +95,5 @@
     - name: restart ntp
       service: name=ntp state=restarted
 
-    - name: restart rsyslog
-      service: name=rsyslog state=restarted
 
-
-
-
-
-#       template: src=templates/bind/db.127.j2 dest=/etc/bind/db.127
-         
-# db.127.j2        db..j2  named.conf.j2          named.conf.zones.j2
-# .j2  db.local.j2                      named.conf.options.j2
-
-
-# template '/etc/bind/db.127' do
-#   source    'bind/db.127.erb'
-#   owner     'bind'
-#   group     'bind'
-#   mode      '0644'
-#   notifies  :restart, 'service[bind]'
-# end
 
