@@ -20,6 +20,11 @@ options {
 
     forwarders          { 129.250.35.250; 129.250.35.251; };
     forward             only;
+    root-delegation-only;
+
+    dnssec-enable       no;
+    dnssec-validation   no;
+    dnssec-lookaside    no;
 
     auth-nxdomain       no;
 };

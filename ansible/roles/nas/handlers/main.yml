@@ -1,6 +1,9 @@
 - name: reload mount
   shell: mount -a
 
+- name: restart samba
+  service: name=smbd state=restarted
+
 # Local Variables:
 # mode: yaml
 # tab-width: 4

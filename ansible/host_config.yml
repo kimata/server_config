@@ -88,7 +88,7 @@ device:
 
   # パソコン
   - name: brazil
-    mac: 00:15:17:a0:5d:79
+    mac:  34:97:f6:27:92:a5
     addr: 192.168.2.50
 
   - name: stick
@@ -106,13 +106,7 @@ device:
     addr: 192.168.2.70
     def_name: true
 
-  # IoT
-
-
-
-# host mocha {
-#     hardware	   ethernet 00:1c:bf:be:b5:b7;
-#     fixed-address  192.168.2.11;
-# }
-
-
+# Local Variables:
+# mode: yaml
+# tab-width: 4
+# End:

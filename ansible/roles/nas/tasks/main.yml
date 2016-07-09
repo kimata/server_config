@@ -1,3 +1,10 @@
+- name: Install Packages
+  apt:
+    pkg={{ item }}
+    state=present
+  with_items:
+    - samba
+
 - name: Create mount point
   file:
     path={{ item }} state=directory
@@ -10,6 +17,12 @@
     src=mount/fstab.j2 dest=/etc/fstab
   notify:
     reload mount
+
+- name: Setting Samba
+  template:
+    src=samba/smb.conf.j2 dest=/etc/samba/smb.conf
+  notify:
+    restart samba
 
 # Local Variables:
 # mode: yaml

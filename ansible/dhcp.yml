@@ -15,7 +15,6 @@
     - name: Install Packages - client
       apt:
         update-cache=yes
-      apt: 
         pkg={{ item }}
         state=present
       with_items:
@@ -28,12 +27,17 @@
     - name: Install Packages - server
       apt:
         update-cache=yes
-      apt: 
         pkg={{ item }}
         state=present
       with_items:
         - postfix
 
+    - name: "Setting - power saving"
+      lineinfile: >-
+        dest='/etc/rc.local'
+        state=present
+        insertbefore="^exit 0"
+        line='powertop --auto-tune'
 
   handlers:
 
