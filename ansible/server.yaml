@@ -1,0 +1,25 @@
+- hosts: all
+  vars_files: 
+    - host_config.yml
+
+  sudo: yes
+
+  roles:
+    - common
+    - nas
+
+  handlers:
+
+  tasks:
+    - name: Install Packages
+      apt:
+        update-cache=yes
+        pkg={{ item }}
+        state=present
+      with_items:
+        - emacs24-nox
+        - tmux
+        - git
+        - zsh
+        - lsb-release
+
