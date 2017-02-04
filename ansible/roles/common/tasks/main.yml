@@ -4,6 +4,7 @@
     state=present
   with_items:
     - ntp
+    - lsb-release
 
 - name: Generate Locales
   locale_gen:

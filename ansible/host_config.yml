@@ -87,9 +87,13 @@ device:
     addr: 192.168.2.42
 
   # パソコン
-  - name: brazil
-    mac:  34:97:f6:27:92:a5
+  - name: mexico
+    mac:  34:97:F6:27:92:A5
     addr: 192.168.2.50
+
+  # - name: brazil
+  #   mac:  34:97:f6:27:92:a5
+  #   addr: 192.168.2.50
 
   - name: stick
     mac: 34:76:c5:1c:03:fe

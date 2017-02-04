@@ -1,15 +1,14 @@
-- hosts: nas
+- hosts: all
   vars_files: 
     - host_config.yml
 
-  sudo: yes
+  become: yes
 
   roles:
     - common
     - nas
 
   handlers:
-
 
   tasks:
     - name: Install Packages
@@ -23,7 +22,3 @@
         - git
         - zsh
         - lsb-release
-
-
-
-
