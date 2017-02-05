@@ -3,10 +3,20 @@
 # 環境変数
 ################################################################################
 export LANG=ja_JP.UTF-8
+export LANGUAGE=ja                      # 日本語
+export LANG=ja_JP.UTF-8
+export LC_ALL=ja_JP.UTF-8
+export G_BROKEN_FILENAMES=1
 
-if [ -f /etc/zsh_command_not_found ]; then
-    source /etc/zsh_command_not_found
-fi
+export TZ=Asia/Tokyo                    # タイムゾーン
+
+export GREP_COLOR='01;33'		# grep
+export LESS='-x4 -g -M -i -R -W'        # less
+export EMACS_VERSION=${${${(f)"$(emacs --version)"}[1]}##GNU Emacs } # Emacs
+
+################################################################################
+# 基本設定
+umask 022                               # パーミッションのマスク
 
 HISTFILE=${HOME}/.zsh_history          	# change history file for root/sudo
 HISTSIZE=100000                         # メモリ内の履歴の数
@@ -19,27 +29,22 @@ setopt share_history                    # ヒストリの共有 for GNU Screen
 setopt hist_no_store                    # historyコマンドは登録しない
 setopt hist_ignore_space                # コマンド行先頭が空白の時登録しない
 
-setopt prompt_subst
 setopt extended_glob
+setopt menu_complete
+setopt correct
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+bindkey -e
+bindkey "^[[Z" reverse-menu-complete
 
 autoload -Uz zmv
 autoload -Uz is-at-least
 
-################################################################################
-# 基本設定
-export LANGUAGE=ja                      # 日本語
-export LANG=ja_JP.UTF-8
-export LC_ALL=ja_JP.UTF-8
-export G_BROKEN_FILENAMES=1
-
-export TZ=Asia/Tokyo                    # タイムゾーン
-
-export GREP_COLOR='01;33'		# grep
-export LESS='-x4 -g -M -i -R -W'        # less
-
-umask 022                               # パーミッションのマスク
-
-export EMACS_VERSION=${${${(f)"$(emacs --version)"}[1]}##GNU Emacs } # Emacs
+if [ -f /etc/zsh_command_not_found ]; then
+    source /etc/zsh_command_not_found
+fi
 
 ################################################################################
 # エイリアス

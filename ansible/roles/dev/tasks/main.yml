@@ -8,6 +8,9 @@
     - keychain
     - emacs24-nox
     - git
+    - cmigemo
+    - migemo-el
+    - develock-el
 
 - name: Setting dircolors
   become: no

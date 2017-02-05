@@ -20,16 +20,6 @@ zplug check || zplug install
 zplug load
 
 ################################################################################
-# 基本設定
-################################################################################
-bindkey -e
-setopt prompt_subst
-setopt menu_complete
-
-zstyle ':completion:*' menu select interactive
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-
-################################################################################
 # カラー
 ################################################################################
 case ${SOLARIZED_THEME:-dark} in
@@ -58,6 +48,8 @@ ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=215'
 # プロンプト
 ################################################################################
 {% raw %}
+setopt prompt_subst
+
 ZSH_THEME_GIT_PROMPT_PREFIX=" [%{%B%F{blue}%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{%f%k%b%K{${bkg}}%B%F{green}%}]"
 ZSH_THEME_GIT_PROMPT_DIRTY=" %{%F{red}%}*%{%f%k%b%}"
@@ -72,6 +64,7 @@ RPROMPT=''
 ################################################################################
 # Keychain 等
 ################################################################################
+stty stop undef
 if [[ ($TERM == xterm*) || (-z $SSH_CLIENT && -z $EMACS) ]]; then
     if [[ -z $TMUX_PANE ]]; then
         # keychain

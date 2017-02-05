@@ -5,21 +5,12 @@
   sudo: yes
 
   roles:
-    - common
-    - nas
+    - server
+    # - common
+    # - nas
 
   handlers:
 
   tasks:
-    - name: Install Packages
-      apt:
-        update-cache=yes
-        pkg={{ item }}
-        state=present
-      with_items:
-        - emacs24-nox
-        - tmux
-        - git
-        - zsh
-        - lsb-release
+
 
