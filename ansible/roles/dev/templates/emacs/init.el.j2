@@ -3,8 +3,10 @@
 ; パッケージ
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("gnu"   . "http://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("org"   . "http://orgmode.org/elpa/"))
+
 (package-initialize)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -109,6 +111,12 @@
 (define-key helm-map            (kbd "C-z"      ) 'helm-select-action)
 ; NOTE: helm-find-files では C-j でディレクトリオープン．C-l で上のディレクトリ移動．
 
+; 補完
+(global-set-key (kbd "C-M-_") 'dabbrev-completion)
+
+; ファイルが更新されたら読み込み直す
+(global-auto-revert-mode 1)
+
 ; バッファ切り替え
 (require 'ibuffer)
 (setq ibuffer-default-sorting-mode 'alphabetic)
@@ -154,12 +162,6 @@
 (setq kept-new-versions 20)                     ; 新しいものは 10 世代
 (setq delete-old-versions t)                    ; 確認せずに古いものを削除
 
-
-(global-set-key (kbd "C-M-_") 'dabbrev-completion)
-
-
-(global-auto-revert-mode 1)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ファイルタイプ別のメジャーモード
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -186,7 +188,3 @@
       (delete-file
        (buffer-file-name (current-buffer)))
       (kill-buffer (current-buffer)))))
-
-; Local Variables:
-; after-save-hook: (lambda () (byte-compile-file (buffer-file-name)))
-; End:

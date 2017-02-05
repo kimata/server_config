@@ -29,6 +29,9 @@ setopt share_history                    # ヒストリの共有 for GNU Screen
 setopt hist_no_store                    # historyコマンドは登録しない
 setopt hist_ignore_space                # コマンド行先頭が空白の時登録しない
 
+setopt autopushd
+setopt pushd_ignore_dups
+
 setopt extended_glob
 setopt menu_complete
 setopt correct
@@ -45,6 +48,8 @@ autoload -Uz is-at-least
 if [ -f /etc/zsh_command_not_found ]; then
     source /etc/zsh_command_not_found
 fi
+
+. /usr/share/autojump/autojump.sh
 
 ################################################################################
 # エイリアス
