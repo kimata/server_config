@@ -11,6 +11,7 @@
     - cmigemo
     - migemo-el
     - develock-el
+    - autojump
 
 - name: Setting dircolors
   become: no

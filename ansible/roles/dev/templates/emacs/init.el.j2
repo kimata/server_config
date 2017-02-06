@@ -25,41 +25,45 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; 色
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(package-install 'moe-theme)
+(require 'moe-theme)
+(moe-dark)
+
 (global-font-lock-mode t)
 (setq font-lock-maximum-decoration t)
 
-(set-foreground-color "white")
+;; (set-foreground-color "white")
 
-(set-face-foreground 'font-lock-builtin-face "color-75")
-(set-face-foreground 'font-lock-comment-face "color-185")
-(set-face-foreground 'font-lock-doc-face "color-173")
-(set-face-foreground 'font-lock-constant-face "color-178")
-(set-face-foreground 'font-lock-function-name-face "color-81")
-(set-face-foreground 'font-lock-keyword-face "color-165")
-(set-face-foreground 'font-lock-string-face "color-45")
-(set-face-foreground 'font-lock-type-face "color-141")
-(set-face-foreground 'font-lock-variable-name-face "color-121")
+;; (set-face-foreground 'font-lock-builtin-face "color-75")
+;; (set-face-foreground 'font-lock-comment-face "color-185")
+;; (set-face-foreground 'font-lock-doc-face "color-173")
+;; (set-face-foreground 'font-lock-constant-face "color-178")
+;; (set-face-foreground 'font-lock-function-name-face "color-81")
+;; (set-face-foreground 'font-lock-keyword-face "color-165")
+;; (set-face-foreground 'font-lock-string-face "color-45")
+;; (set-face-foreground 'font-lock-type-face "color-141")
+;; (set-face-foreground 'font-lock-variable-name-face "color-121")
 
-; モードライン
-(set-face-foreground 'mode-line "gray30")
-(set-face-background 'mode-line "gray85")
-(set-face-foreground 'mode-line-inactive "gray85")
-(set-face-background 'mode-line-inactive "black")
+;; ; モードライン
+;; (set-face-foreground 'mode-line "gray30")
+;; (set-face-background 'mode-line "gray85")
+;; (set-face-foreground 'mode-line-inactive "gray85")
+;; (set-face-background 'mode-line-inactive "black")
 
-; カーソル行
-(global-hl-line-mode t)
-(custom-set-faces '(hl-line ((t (:background "color-237")))))
+;; ; カーソル行
+;; (global-hl-line-mode t)
+;; (custom-set-faces '(hl-line ((t (:background "color-237")))))
 
-; リージョン
-(setq transient-mark-mode t)
-(set-face-background 'region "color-75")
-(set-face-foreground 'region "white")
+;; ; リージョン
+;; (setq transient-mark-mode t)
+;; (set-face-background 'region "color-75")
+;; (set-face-foreground 'region "white")
 
-; 検索マッチ
-(set-face-background 'isearch "color-220")
-(set-face-background 'lazy-highlight "color-229")
-(set-face-foreground 'isearch "black")
-(set-face-foreground 'lazy-highlight "black")
+;; ; 検索マッチ
+;; (set-face-background 'isearch "color-220")
+;; (set-face-background 'lazy-highlight "color-229")
+;; (set-face-foreground 'isearch "black")
+;; (set-face-foreground 'lazy-highlight "black")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; 表示
@@ -85,6 +89,12 @@
 (package-install 'session)
 (setq session-save-file "~/.emacs-session")
 (add-hook 'after-init-hook 'session-initialize)
+
+; 最近使ったファイル
+(package-install 'recentf-ext)
+(setq recentf-max-saved-items 1000)
+(setq recentf-auto-cleanup 10)
+(setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list))
 
 ; 履歴を永続化
 (savehist-mode 1)
