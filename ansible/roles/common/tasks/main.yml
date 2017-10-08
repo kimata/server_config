@@ -5,6 +5,8 @@
   with_items:
     - ntp
     - lsb-release
+    - emacs24-nox
+    - git
 
 - name: Generate Locales
   locale_gen:

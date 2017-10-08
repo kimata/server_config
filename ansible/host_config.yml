@@ -110,6 +110,22 @@ device:
     addr: 192.168.2.70
     def_name: true
 
+  # ディスプレイ
+  - name: display-living
+    mac: 84:d6:d0:b0:a8:1c
+    addr: 192.168.2.80
+    def_name: true
+
+  - name: display-library
+    mac: 34:d2:70:96:9b:5e
+    addr: 192.168.2.81
+    def_name: true
+
+  - name: display-test
+    mac: b4:7c:9c:82:8b:41
+    addr: 192.168.2.82
+    def_name: true
+
 # Local Variables:
 # mode: yaml
 # tab-width: 4

@@ -2,7 +2,7 @@
   vars_files: 
     - host_config.yml
 
-  sudo: yes
+  become: yes
 
   roles:
     - server

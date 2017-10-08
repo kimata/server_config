@@ -3,15 +3,12 @@
     pkg={{ item }}
     state=present
   with_items:
-    - ansible
-    - tmux
-    - keychain
-    - emacs24-nox
-    - git
-    - cmigemo
-    - migemo-el
-    - develock-el
+    # - cmigemo
+    # - migemo-el
+    # - develock-el
     - autojump
+    - tmux
+    - zsh
 
 - name: Setting dircolors
   become: no
@@ -31,7 +28,10 @@
     - zshenv
     - zshrc
 
-
+- name: Setting Emacs
+  become: no
+  template:
+    src=emacs/init.el.j2 dest=~/.emacs.d/init.el
 
 # - name: Setting zplug
 #   become: no

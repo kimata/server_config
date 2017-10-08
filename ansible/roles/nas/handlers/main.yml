@@ -1,5 +1,8 @@
 - name: reload mount
-  shell: mount -a
+  mount:
+    name: mount -a
+    src: LABEL=root
+    state: present
 
 - name: restart samba
   service: name=smbd state=restarted
