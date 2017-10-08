@@ -4,6 +4,11 @@
     state=present
   with_items:
     - samba
+    - postfix
+
+- name: Setting Kernel Modules
+  lineinfile:
+    dest=/etc/modules line=zfs
 
 - name: Create mount point
   file:
@@ -23,6 +28,15 @@
     src=samba/smb.conf.j2 dest=/etc/samba/smb.conf
   notify:
     restart samba
+
+- name: Setting Postfix
+  lineinfile:
+    dest={{item.dest}} line={{item.line}}
+  with_items:
+    - { dest: '/etc/postfix/main.cf', line: "relayhost = [mail.{{network.domain}}]" }
+    - { dest: '/etc/aliases', line: "root: {{network.root_mail}}" }
+  notify:
+    update mail alias
 
 # Local Variables:
 # mode: yaml

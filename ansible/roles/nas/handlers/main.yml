@@ -7,6 +7,10 @@
 - name: restart samba
   service: name=smbd state=restarted
 
+- name: update mail alias
+  shell: newaliases
+
+  
 # Local Variables:
 # mode: yaml
 # tab-width: 4
