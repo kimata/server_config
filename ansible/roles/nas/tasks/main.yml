@@ -5,6 +5,8 @@
   with_items:
     - samba
     - postfix
+    - collectd
+    - hddtemp
 
 - name: Setting Kernel Modules
   lineinfile:
@@ -38,6 +40,18 @@
   notify:
     update mail alias
 
+- name: Setting Hddtemp
+  replace:
+    dest=/etc/default/hddtemp regexp='^RUN_DAEMON=' replace='RUN_DAEMON="true"'
+  notify:
+    restart hddtemp
+
+- name: Setting Collectd
+  template:
+    src=collectd/collectd.conf.j2 dest=/etc/collectd/collectd.conf
+  notify:
+    restart collectd
+    
 # Local Variables:
 # mode: yaml
 # tab-width: 4

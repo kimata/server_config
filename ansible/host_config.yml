@@ -10,6 +10,7 @@ network:
   lease_start: 192.168.2.100
   lease_end: 192.168.2.200
   zone: 2.168.192
+  influxdb: 192.168.2.20
   root_mail: root@dripper.green-rabbit.net
 
 user:

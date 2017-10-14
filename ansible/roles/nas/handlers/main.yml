@@ -7,6 +7,12 @@
 - name: restart samba
   service: name=smbd state=restarted
 
+- name: restart hddtemp
+  service: name=hddtemp state=restarted
+  
+- name: restart collectd
+  service: name=collectd state=restarted
+  
 - name: update mail alias
   shell: newaliases
 
