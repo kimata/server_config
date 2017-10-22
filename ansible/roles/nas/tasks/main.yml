@@ -5,14 +5,21 @@
   with_items:
     - samba
     - postfix
+    - zfsutils-linux
     - collectd
     - hddtemp
 
 - name: Setting Kernel Modules
   lineinfile:
     dest=/etc/modules line=zfs
+  notify:
+    load zfs
 
-- name: Create mount point
+- name: Setting ZFS Permission
+  file:
+    path=/dev/zfs owner=root group=sudo mode=0660
+
+- name: Create Mount Point
   file:
     path={{ item }} state=directory
   with_items:
@@ -48,10 +55,10 @@
 
 - name: Setting Collectd
   template:
-    src={{item.src}} dest={{item.dest}}
+    src={{item.src}} dest={{item.dest}} mode={{item.mode}}
   with_items:
-    - { src: 'collectd/collectd.conf.j2', dest: '/etc/collectd/collectd.conf' }
-    - { src: 'collectd/zpool_df.py.j2', dest: '/usr/lib/collectd/zpool_df.py' }
+    - { src: 'collectd/collectd.conf.j2', dest: '/etc/collectd/collectd.conf', mode: '0644' }
+    - { src: 'collectd/zpool_df.py.j2', dest: '/usr/lib/collectd/zpool_df.py', mode: '0755' }
   notify:
     restart collectd
 

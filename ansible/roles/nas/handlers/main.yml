@@ -4,6 +4,9 @@
     src: LABEL=root
     state: present
 
+- name: load zfs
+  shell: modprobe zfs
+    
 - name: restart samba
   service: name=smbd state=restarted
 

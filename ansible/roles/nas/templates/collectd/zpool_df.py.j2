@@ -1,17 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# collectd Plugin:Zpool_DF
+# plugin for zpool to collect free space and usage.
+
 import os, sys, time
 import subprocess as sp
 import pprint
 
 PLUGIN_NAME = 'zpool_df'
 
-# FIXME: remove sudo, if below commit is merged into Ubuntu LTS release.
-# https://github.com/kernelOfTruth/zfs/commit/6645ae9f0d1e4da04b2aa454ebe65927a259e5a8
-
 def get_zpool_list():
-  child = sp.Popen(['sudo', 'zpool', 'list'], stdout=sp.PIPE)
+  child = sp.Popen(['zpool', 'list'], stdout=sp.PIPE)
   child.wait()
   if child.returncode != 0:
     sys.stderr.write('Failed to get zpool list.')
@@ -28,7 +28,7 @@ def get_zpool_list():
   return zpool_list
 
 def get_zpool_usage_info(zpool):
-  child = sp.Popen(['sudo', 'zpool', 'get', '-pH', 'size,allocated,free', zpool],
+  child = sp.Popen(['zpool', 'get', '-pH', 'size,allocated,free', zpool],
                    stdout=sp.PIPE)
   child.wait()
   if child.returncode != 0:
