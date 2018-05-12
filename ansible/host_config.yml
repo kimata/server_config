@@ -12,7 +12,7 @@ network:
   zone: 2.168.192
   influxdb: 192.168.2.20
   root_mail: root@dripper.green-rabbit.net
-
+  
 user:
   - kimata
 
@@ -189,6 +189,10 @@ device:
     mac: 00:30:d3:19:84:80
     addr: 192.168.2.102
     def_name: true
+
+ipmi:
+  kenya:
+    - "12-Sys Exhaust"
     
 # Local Variables:
 # mode: yaml
