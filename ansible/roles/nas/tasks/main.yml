@@ -19,6 +19,10 @@
   file:
     path=/dev/zfs owner=root group=sudo mode=0660
 
+- name: Setting ZED
+  replace:
+    dest=/etc/zfs/zed.d/zed.rc regexp='^#ZED_NOTIFY_VERBOSE=0' replace='ZED_NOTIFY_VERBOSE=1'
+    
 - name: Create Mount Point
   file:
     path={{ item }} state=directory
