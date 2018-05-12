@@ -7,8 +7,8 @@ network:
   dns: 192.168.2.2
   ntp: 192.168.2.2
   dhcp: 192.168.2.2
-  lease_start: 192.168.2.100
-  lease_end: 192.168.2.200
+  lease_start: 192.168.2.200
+  lease_end: 192.168.2.250
   zone: 2.168.192
   influxdb: 192.168.2.20
   root_mail: root@dripper.green-rabbit.net
@@ -55,6 +55,11 @@ device:
     mac: 9c:b6:54:07:d8:90
     addr: 192.168.2.23
 
+  - name: kenya
+    mac: 3c:a8:2a:9f:54:04
+    addr: 192.168.2.24
+    def_name: true
+    
   - name: columbia-ctrl
     mac: 00:9c:02:9d:fe:5a
     addr: 192.168.2.30
@@ -75,6 +80,16 @@ device:
     addr: 192.168.2.33
     def_name: true
 
+  - name: kenya-ctrl
+    mac: 3c:a8:2a:9f:54:06
+    addr: 192.168.2.34
+    def_name: true
+
+  - name: ecuador-ctrl
+    mac: a0:1d:48:c7:58:ee
+    addr: 192.168.2.35
+    def_name: true
+    
   # プリンタ
   - name: printer-laser-color
     mac: 70:18:8b:4d:36:20
@@ -102,14 +117,23 @@ device:
     addr: 192.168.2.52
 
   # モバイル
-  - name: iPhone
+  - name: phone-iphone
     mac: 64:a5:c3:d6:a9:17
     addr: 192.168.2.60
 
+  - name: phone-p10_lite
+    mac:  bc:3d:85:21:c2:8f
+    addr: 192.168.2.61
+
   # メディアプレーヤー
+  - name: speaker-echo
+    mac:  fc:a1:83:dd:e1:4b
+    addr: 192.168.2.70
+    def_name: true
+  
   - name: squeezebox
     mac: 00:04:20:23:3d:d5
-    addr: 192.168.2.70
+    addr: 192.168.2.71
     def_name: true
 
   # ディスプレイ
@@ -128,6 +152,44 @@ device:
     addr: 192.168.2.82
     def_name: true
 
+  - name: display-intercom
+    mac: bc:c3:42:12:50:a0
+    addr: 192.168.2.83
+    def_name: true
+    
+  # センサー
+  - name: ESP32-outdoor
+    mac: 30:ae:a4:04:2b:2c
+    addr: 192.168.2.90
+
+  - name: ESP32-outdoor2
+    mac: 30:ae:a4:05:a3:d4
+    addr: 192.168.2.91
+    
+  - name: ESP32-indoor
+    mac: 30:ae:a4:04:25:38
+    addr: 192.168.2.92
+    
+  - name: ESP32-indoor2
+    mac: 30:ae:a4:28:8a:e8
+    addr: 192.168.2.93
+
+  # 計測器
+  - name: osc-1054z
+    mac: 00:19:af:34:62:5e
+    addr: 192.168.2.100
+    def_name: true
+  
+  - name: dmm-34461a
+    mac: 80:09:02:01:af:27
+    addr: 192.168.2.101
+    def_name: true
+    
+  - name: dmm-34410a
+    mac: 00:30:d3:19:84:80
+    addr: 192.168.2.102
+    def_name: true
+    
 # Local Variables:
 # mode: yaml
 # tab-width: 4

@@ -19,6 +19,7 @@
     - { name: named.conf.zones,     owner: root, group: bind }
     - { name: db.127,               owner: root, group: bind }
     - { name: db.local,             owner: root, group: bind }
+    - { name: db.ddns.net,          owner: root, group: bind }
   notify: restart bind
 
 - name: Setting BIND - copy local db

@@ -2,6 +2,7 @@
   mount:
     name: mount -a
     src: LABEL=root
+    fstype: ext4
     state: present
 
 - name: load zfs

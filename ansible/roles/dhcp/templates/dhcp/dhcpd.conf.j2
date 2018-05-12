@@ -14,7 +14,8 @@ ddns-updates        on;
 ddns-update-style   interim;
 update-static-leases on;
 use-host-decl-names on;
-ignore              client-updates; 
+ignore              client-updates;
+# ping-check          false;     
 
 zone {{ network.domain }}. {
     primary         {{ network.dns }};

@@ -15,6 +15,10 @@ view "internal" {
         type            master;
         file            "/etc/bind/db.127";
     };
+    zone "ddns.net" IN {
+        type            master;
+        file            "/etc/bind/db.ddns.net";
+    };
     zone "{{ network.domain }}" IN {
         type            master;
         file           "/var/cache/bind/db.{{ network.domain }}-internal";
