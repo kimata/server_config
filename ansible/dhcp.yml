@@ -13,18 +13,6 @@
     - dhcp
 
   tasks:
-    - name: Install Packages - client
-      apt:
-        update-cache=yes
-        pkg={{ item }}
-        state=present
-      with_items:
-        - emacs24-nox
-        - tmux
-        - git
-        - zsh
-        - lsb-release
-
     - name: Install Packages - server
       apt:
         update-cache=yes

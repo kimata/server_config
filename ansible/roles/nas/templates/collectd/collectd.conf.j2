@@ -4,7 +4,7 @@ FQDNLookup      true
 Interval        120
 
 LoadPlugin      syslog
-LoadPlugin unixsock
+LoadPlugin      unixsock
 LoadPlugin      df
 LoadPlugin      interface
 LoadPlugin      hddtemp
@@ -39,7 +39,7 @@ LoadPlugin      exec
 </Plugin>
 
 # <Plugin "ipmi">
-# {% for sensor in ipmi[ansible_hostname] %}
+# {% for sensor in (ipmi[ansible_hostname] | default(omit)) %}
 #     Sensor "{{ sensor }}"
 #     IgnoreSelected false
 # {% endfor %}

@@ -21,7 +21,7 @@
     - { name: db.local,             owner: root, group: bind }
     - { name: db.ddns.net,          owner: root, group: bind }
   notify: restart bind
-
+  
 - name: Setting BIND - copy local db
   template:
     src=bind/{{ item }}.j2 dest=/var/cache/bind/{{ item }}
@@ -33,6 +33,15 @@
   when: bind_local_db.stat.md5 is not defined
   notify: restart bind
 
+- name: Setting BIND - clean cache
+  file:
+    path='/var/cache/bind/{{ item }}.jnl' state=absent
+  with_items:
+    - db.{{ network.zone }}
+    - db.{{ network.domain }}-internal
+  when: bind_local_db.stat.md5 is not defined
+  notify: restart bind
+  
 - name: Setting BIND - make directory
   file:
     path=/var/log/named state=directory

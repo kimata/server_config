@@ -112,9 +112,9 @@ device:
   #   mac:  34:97:f6:27:92:a5
   #   addr: 192.168.2.50
 
-  - name: stick
-    mac: 34:76:c5:1c:03:fe
-    addr: 192.168.2.52
+  # - name: stick
+  #   mac: 34:76:c5:1c:03:fe
+  #   addr: 192.168.2.52
 
   # モバイル
   - name: phone-iphone
@@ -154,6 +154,7 @@ device:
 
   - name: display-intercom
     mac: bc:c3:42:12:50:a0
+
     addr: 192.168.2.83
     def_name: true
     
@@ -173,7 +174,11 @@ device:
   - name: ESP32-indoor2
     mac: 30:ae:a4:28:8a:e8
     addr: 192.168.2.93
-
+    
+  - name: ESP32-rain
+    mac: 30:ae:a4:21:7a:a4
+    addr: 192.168.2.94
+    
   # 計測器
   - name: osc-1054z
     mac: 00:19:af:34:62:5e
@@ -191,6 +196,8 @@ device:
     def_name: true
 
 ipmi:
+  # columbia:
+  #   - "16-System Board"
   kenya:
     - "12-Sys Exhaust"
     

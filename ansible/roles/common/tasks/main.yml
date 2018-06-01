@@ -3,13 +3,14 @@
     pkg={{ item }}
     state=present
   with_items:
-    - ntp
-    - lsb-release
-    - htop
-    - emacs25-nox
-    - zsh
+    - emacs-nox
     - git
-
+    - htop
+    - lsb-release
+    - ntp
+    - tmux
+    - zsh
+    
 - name: Generate Locales
   locale_gen:
     name: "{{ item }}"
