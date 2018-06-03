@@ -195,12 +195,6 @@ device:
     addr: 192.168.2.102
     def_name: true
 
-ipmi:
-  # columbia:
-  #   - "16-System Board"
-  kenya:
-    - "12-Sys Exhaust"
-    
 # Local Variables:
 # mode: yaml
 # tab-width: 4
