@@ -7,8 +7,8 @@ network:
   dns: 192.168.2.2
   ntp: 192.168.2.2
   dhcp: 192.168.2.2
-  lease_start: 192.168.2.200
-  lease_end: 192.168.2.250
+  lease_start: 192.168.2.160
+  lease_end: 192.168.2.239 # MEMO: 240-250 は VPN 用にルータでプール
   zone: 2.168.192
   influxdb: 192.168.2.20
   root_mail: root@dripper.green-rabbit.net
@@ -18,25 +18,21 @@ user:
 
 device:
   # ネットワーク機器
-  - name: switch-living
-    mac: 04:da:d2:12:04:c8
+  - name: wifi-english
+    mac: 00:a0:de:e4:ba:d8
     addr: 192.168.2.10
 
-  - name: switch-desk
-    mac: 04:da:d2:12:05:cc
+  - name: wifi-irish
+    mac: ac:44:f2:34:0d:90
     addr: 192.168.2.11
 
-  - name: wifi-irish
-    mac:  00:a0:de:9e:23:78
+  - name: wifi-scotland
+    mac: ac:44:f2:33:f8:c0
     addr: 192.168.2.12
 
-  - name: wifi-aterm-bridge
-    mac: a4:12:42:a1:52:24
+  - name: switch-desk
+    mac: 00:a0:de:ca:63:d8
     addr: 192.168.2.13
-
-  - name: wifi-aterm-converter
-    mac: a4:12:42:a1:52:14
-    addr: 192.168.2.14
 
   # サーバー
   - name: columbia
@@ -103,11 +99,27 @@ device:
     mac: c0:d9:62:ee:45:30 
     addr: 192.168.2.42
 
+  - name: printer-prusa
+    mac: b8:27:eb:15:eb:49
+    addr: 192.168.2.43
+    
   # パソコン
   - name: mexico
     mac:  34:97:F6:27:92:A5
     addr: 192.168.2.50
 
+  - name: canyon
+    mac:  D4:5D:DF:13:94:0F
+    addr: 192.168.2.51
+    
+  - name: vaio
+    mac: 5c:51:4f:ce:29:a8
+    addr: 192.168.2.52
+
+  - name: versapro
+    mac: 34:13:e8:29:0b:6c
+    addr: 192.168.2.53
+    
   # - name: brazil
   #   mac:  34:97:f6:27:92:a5
   #   addr: 192.168.2.50
@@ -118,13 +130,18 @@ device:
 
   # モバイル
   - name: phone-iphone
-    mac: 64:a5:c3:d6:a9:17
+    mac: 68:ab:1e:5d:82:3a
     addr: 192.168.2.60
 
   - name: phone-p10_lite
     mac:  bc:3d:85:21:c2:8f
     addr: 192.168.2.61
 
+  # - name: tablet-m3_lite
+  #   mac:  
+  #   addr: 192.168.2.62
+
+    
   # メディアプレーヤー
   - name: speaker-echo
     mac:  fc:a1:83:dd:e1:4b
@@ -178,21 +195,68 @@ device:
   - name: ESP32-rain
     mac: 30:ae:a4:21:7a:a4
     addr: 192.168.2.94
+
+  - name: ESP32-raindrop
+    mac: 30:ae:a4:20:e8:6c
+    addr: 192.168.2.95
+
+  - name: ESP32-geiger
+    mac: 30:ae:a4:28:96:ac
+    addr: 192.168.2.96
+    
+  # Raspberry Pi
+  - name: rasp-meter-1-wifi
+    mac: b8:27:eb:c7:9f:fa
+    addr: 192.168.2.101
+
+  - name: rasp-meter-2-wifi
+    mac: b8:27:eb:1c:c3:4d
+    addr: 192.168.2.102
+
+  - name: rasp-meter-3-wifi
+    mac: b8:27:eb:f9:7e:cc
+    addr: 192.168.2.103
+  
+  - name: rasp-meter-4-wifi
+    mac: b8:27:eb:a5:7d:29
+    addr: 192.168.2.104
+  
+  - name: rasp-meter-5-wifi
+    mac: b8:27:eb:61:c5:94
+    addr: 192.168.2.105
+
+  - name: rasp-water
+    mac: b8:27:eb:91:48:44
+    addr: 192.168.2.106
+    
+  # ブリッジ
+  - name: bridge-hue
+    mac:  00:17:88:b2:57:5d
+    addr: 192.168.2.110
+
+  - name: bridge-usb
+    mac:  84:25:3f:1a:24:0f
+    addr: 192.168.2.111
+
+  # 自動化
+  - name: wemo-desk
+    mac:  ec:1a:59:79:27:fd
+    addr: 192.168.2.120
     
   # 計測器
   - name: osc-1054z
     mac: 00:19:af:34:62:5e
-    addr: 192.168.2.100
+    addr: 192.168.2.130
     def_name: true
   
   - name: dmm-34461a
     mac: 80:09:02:01:af:27
-    addr: 192.168.2.101
+    addr: 192.168.2.131
     def_name: true
     
   - name: dmm-34410a
     mac: 00:30:d3:19:84:80
-    addr: 192.168.2.102
+    addr: 192.168.2.132
     def_name: true
 
 # Local Variables:

@@ -5,7 +5,8 @@
   with_items:
     - bind9 
 
-- stat: path=/var/cache/bind/db.{{ network.domain }}-internal
+- name: Checking config file existence
+  stat: path=/var/cache/bind/db.{{ network.domain }}-internal
   register: bind_local_db
 
 - name: Setting BIND - copy configuration
@@ -30,16 +31,15 @@
   with_items:
     - db.{{ network.zone }}
     - db.{{ network.domain }}-internal
-  when: bind_local_db.stat.md5 is not defined
+  when: not bind_local_db.stat.exists
   notify: restart bind
-
-- name: Setting BIND - clean cache
-  file:
-    path='/var/cache/bind/{{ item }}.jnl' state=absent
+  
+- name: Setting BIND - remove cache
+  file: path=/var/cache/bind/{{ item }}.jnl state=absent
   with_items:
     - db.{{ network.zone }}
     - db.{{ network.domain }}-internal
-  when: bind_local_db.stat.md5 is not defined
+  when: not bind_local_db.stat.exists
   notify: restart bind
   
 - name: Setting BIND - make directory
