@@ -3,7 +3,7 @@
     pkg={{ item }}
     state=present
   with_items:
-    - bind9 
+    - bind9
 
 - name: Checking config file existence
   stat: path=/var/cache/bind/db.{{ network.domain }}-internal

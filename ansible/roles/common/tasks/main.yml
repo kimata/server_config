@@ -5,12 +5,7 @@
   with_items:
     - emacs-nox
     - git
-    - tig
-    - htop
     - lsb-release
-    - tmux
-    - zsh
-    - silversearcher-ag
 
 - name: Change Apt Repository
   replace:

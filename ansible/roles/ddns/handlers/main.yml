@@ -1,0 +1,7 @@
+- name: restart ddclient
+  service: name=ddclient state=restarted
+
+# Local Variables:
+# mode: yaml
+# tab-width: 4
+# End:

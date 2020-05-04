@@ -4,6 +4,7 @@
 
   vars_files: 
     - host_config.yml
+    - ddyns_config.yml
 
   become: yes
 
@@ -11,6 +12,7 @@
     - common
     - dns
     - dhcp
+    - ddns
 
   tasks:
     - name: Install Packages - server

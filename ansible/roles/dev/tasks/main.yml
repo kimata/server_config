@@ -3,9 +3,11 @@
     pkg={{ item }}
     state=present
   with_items:
-    # - cmigemo
-    # - migemo-el
-    # - develock-el
+    - tig
+    - htop
+    - tmux
+    - zsh
+    - silversearcher-ag
     - autojump
     - tmux
     - zsh

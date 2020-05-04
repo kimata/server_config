@@ -1,0 +1,16 @@
+- name: Install Packages
+  apt: 
+    pkg={{ item }}
+    state=present
+  with_items:
+    - ddclient
+
+- name: Setting DDclient
+  template:
+    src=ddclient/ddclient.conf.j2 dest=/etc/ddclient.conf
+  notify: restart ddclient
+  
+# Local Variables:
+# mode: yaml
+# tab-width: 4
+# End:

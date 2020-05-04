@@ -8,6 +8,7 @@
 (add-to-list 'package-archives '("org"   . "http://orgmode.org/elpa/"))
 
 (package-initialize)
+(unless package-archive-contents (package-refresh-contents)) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; 基本設定
@@ -52,6 +53,10 @@
 (package-install 'auto-save-buffers-enhanced)
 (auto-save-buffers-enhanced t)
 
+; 日本語検索
+(package-install 'migemo)
+(require 'migemo)
+
 ; カーソル位置を保存
 (package-install 'session)
 (setq session-save-file "~/.emacs-session")
@@ -65,9 +70,6 @@
 
 ; 履歴を永続化
 (savehist-mode 1)
-
-; やり直しの取り消し
-(package-install 'redo+)
 
 ; スペースの自動挿入
 (package-install 'electric-spacing)
