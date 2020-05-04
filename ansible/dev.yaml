@@ -1,9 +1,10 @@
 - hosts: all
+  vars_files:
+    - host_config.yml
 
   become: yes
 
   roles:
-    - common
     - dev
 
   handlers:

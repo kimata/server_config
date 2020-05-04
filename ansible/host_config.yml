@@ -12,7 +12,7 @@ network:
   zone: 2.168.192
   influxdb: 192.168.2.20
   root_mail: root@dripper.green-rabbit.net
-  
+
 user:
   - kimata
 
@@ -26,13 +26,25 @@ device:
     mac: ac:44:f2:34:0d:90
     addr: 192.168.2.11
 
-  - name: wifi-scotland
-    mac: ac:44:f2:33:f8:c0
+  - name: wifi-ireland
+    mac: ac:44:f2:4a:f7:10
     addr: 192.168.2.12
 
-  - name: switch-desk
-    mac: 00:a0:de:ca:63:d8
+  - name: wifi-scotland
+    mac: ac:44:f2:59:f1:80
     addr: 192.168.2.13
+
+  - name: wifi-aterm
+    mac: 6c:e4:da:6a:c3:98
+    addr: 192.168.2.14
+
+  - name: switch-root
+    mac: 00:a0:de:ca:63:d8
+    addr: 192.168.2.16
+
+  - name: switch-server
+    mac: 00:a0:de:ef:e8:e6
+    addr: 192.168.2.17
 
   # サーバー
   - name: columbia
@@ -55,7 +67,24 @@ device:
     mac: 3c:a8:2a:9f:54:04
     addr: 192.168.2.24
     def_name: true
-    
+
+  - name: ecuador
+    mac: a0:1d:48:c7:58:ec
+    addr: 192.168.2.25
+    def_name: true
+
+  - name: vmware
+    mac: 9c:b6:54:0f:17:78
+    addr: 192.168.2.26
+
+  - name: india
+    mac: 00:0c:29:b8:d7:ba
+    addr: 192.168.2.27
+
+  - name: jawa
+    mac: 3c:a8:2a:a0:70:dc
+    addr: 192.168.2.28
+
   - name: columbia-ctrl
     mac: 00:9c:02:9d:fe:5a
     addr: 192.168.2.30
@@ -85,7 +114,17 @@ device:
     mac: a0:1d:48:c7:58:ee
     addr: 192.168.2.35
     def_name: true
-    
+
+  - name: vmware-ctrl
+    mac: 9c:b6:54:0f:17:7a
+    addr: 192.168.2.36
+    def_name: true
+
+  - name: jawa-ctrl
+    mac: 3c:a8:2a:a0:70:de
+    addr: 192.168.2.37
+    def_name: true
+
   # プリンタ
   - name: printer-laser-color
     mac: 70:18:8b:4d:36:20
@@ -100,9 +139,9 @@ device:
     addr: 192.168.2.42
 
   - name: printer-prusa
-    mac: b8:27:eb:15:eb:49
+    mac: b8:27:eb:02:47:81
     addr: 192.168.2.43
-    
+
   # パソコン
   - name: mexico
     mac:  34:97:F6:27:92:A5
@@ -133,24 +172,46 @@ device:
     mac: 68:ab:1e:5d:82:3a
     addr: 192.168.2.60
 
-  - name: phone-p10_lite
-    mac:  bc:3d:85:21:c2:8f
+  - name: phone-iphone-old
+    mac: 64:a5:c3:d6:a9:17
     addr: 192.168.2.61
+    
+  - name: phone-p30
+    mac:  88:40:3b:bd:4c:ad
+    addr: 192.168.2.62
 
-  # - name: tablet-m3_lite
-  #   mac:  
-  #   addr: 192.168.2.62
+  - name: tablet-m3_lite
+    mac:  10:b1:f8:31:cd:68
+    addr: 192.168.2.63
 
+  - name: nintendo-switch
+    mac:  64:b5:c6:c2:fd:04
+    addr: 192.168.2.64
     
   # メディアプレーヤー
   - name: speaker-echo
     mac:  fc:a1:83:dd:e1:4b
     addr: 192.168.2.70
     def_name: true
-  
-  - name: squeezebox
-    mac: 00:04:20:23:3d:d5
+
+  - name: speaker-echo-plus
+    mac:  cc:f7:35:54:15:9a
     addr: 192.168.2.71
+    def_name: true
+
+  - name: speaker-srs-x99
+    mac:  d8:5d:e2:69:7c:2d
+    addr: 192.168.2.72
+    def_name: true
+
+  - name: speaker-squeezebox
+    mac: 00:04:20:23:3d:d5
+    addr: 192.168.2.74
+    def_name: true
+
+  - name: tv-bravia
+    mac: 9c:30:5b:7c:e8:1f
+    addr: 192.168.2.75
     def_name: true
 
   # ディスプレイ
@@ -174,33 +235,34 @@ device:
 
     addr: 192.168.2.83
     def_name: true
-    
+
   # センサー
-  - name: ESP32-outdoor
-    mac: 30:ae:a4:04:2b:2c
+  - name: esp32-outdoor
+    mac: a4:cf:12:24:fa:e8
     addr: 192.168.2.90
 
-  - name: ESP32-outdoor2
-    mac: 30:ae:a4:05:a3:d4
+  - name: esp32-outdoor2
+    # mac: 30:ae:a4:05:a3:d4
+    mac: 3c:71:bf:f1:29:74
     addr: 192.168.2.91
     
-  - name: ESP32-indoor
+  - name: esp32-indoor
     mac: 30:ae:a4:04:25:38
     addr: 192.168.2.92
     
-  - name: ESP32-indoor2
+  - name: esp32-indoor2
     mac: 30:ae:a4:28:8a:e8
     addr: 192.168.2.93
     
-  - name: ESP32-rain
+  - name: esp32-rain
     mac: 30:ae:a4:21:7a:a4
     addr: 192.168.2.94
 
-  - name: ESP32-raindrop
-    mac: 30:ae:a4:20:e8:6c
+  - name: esp32-raindrop
+    mac: 30:ae:a4:14:56:0c
     addr: 192.168.2.95
 
-  - name: ESP32-geiger
+  - name: esp32-geiger
     mac: 30:ae:a4:28:96:ac
     addr: 192.168.2.96
     
@@ -228,8 +290,20 @@ device:
   - name: rasp-water
     mac: b8:27:eb:91:48:44
     addr: 192.168.2.106
+
+  - name: rasp-storeroom
+    mac: b8:27:eb:15:eb:49
+    addr: 192.168.2.107
+
+  - name: rasp-camera-1
+    mac: b8:27:eb:d7:01:3d
+    addr: 192.168.2.108
     
-  # ブリッジ
+  - name: rasp-remote-2
+    mac: b8:27:eb:95:03:ac
+    addr: 192.168.2.109
+
+    # ブリッジ
   - name: bridge-hue
     mac:  00:17:88:b2:57:5d
     addr: 192.168.2.110
@@ -242,18 +316,30 @@ device:
   - name: wemo-desk
     mac:  ec:1a:59:79:27:fd
     addr: 192.168.2.120
-    
+
+  - name: esp32-wifi-io-1
+    mac: a4:cf:12:6c:39:68
+    addr: 192.168.2.122
+
+  - name: esp32-wifi-io-2
+    mac: 30:ae:a4:21:7a:b8
+    addr: 192.168.2.123
+
+  # - name: esp32-wifi-io-3
+  #   mac: 30:ae:a4:28:9b:04
+  #   addr: 192.168.2.124
+
   # 計測器
   - name: osc-1054z
     mac: 00:19:af:34:62:5e
     addr: 192.168.2.130
     def_name: true
-  
+
   - name: dmm-34461a
     mac: 80:09:02:01:af:27
     addr: 192.168.2.131
     def_name: true
-    
+
   - name: dmm-34410a
     mac: 00:30:d3:19:84:80
     addr: 192.168.2.132

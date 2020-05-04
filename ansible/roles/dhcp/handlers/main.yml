@@ -1,3 +1,6 @@
+- name: netplan apply
+  shell: netplan apply
+
 - name: restart dhcpd
   service: name=isc-dhcp-server state=restarted
 

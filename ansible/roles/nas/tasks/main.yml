@@ -8,6 +8,9 @@
     - zfsutils-linux
     - collectd
     - hddtemp
+    - nfs-kernel-server
+    - apcupsd
+    - prometheus-node-exporter
 
 - name: Setting Kernel Modules
   lineinfile:
@@ -65,6 +68,12 @@
     - { src: 'collectd/zpool_df.py.j2', dest: '/usr/lib/collectd/zpool_df.py', mode: '0755' }
   notify:
     restart collectd
+
+- name: Setting APC UPS
+  template:
+    src=apcupsd/apcupsd.conf.j2 dest=/etc/apcupsd/apcupsd.conf
+  notify:
+    restart apcupsd
 
 # Local Variables:
 # mode: yaml

@@ -33,9 +33,16 @@
   template:
     src=emacs/init.el.j2 dest=~/.emacs.d/init.el
 
-# - name: Setting zplug
-#   become: no
-#   shell: curl -sL zplug.sh/installer | zsh
+- name: Setting zplug
+  become: no
+  git:
+    repo: https://github.com/zplug/zplug.git
+    dest: .zplug
+
+- name: Setting Default Shell
+  user:
+    name: "{{ ansible_env.SUDO_USER }}"
+    shell: /bin/zsh
 
 # Local Variables:
 # mode: yaml

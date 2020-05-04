@@ -4,10 +4,13 @@
     state=present
   with_items:
     - isc-dhcp-server
+    - prometheus-node-exporter
 
 - name: Setting Network
   template:
-    src=network/interfaces.dhcp.j2 dest=/etc/network/interfaces
+    src=network/00-installer-config.yaml.j2 dest=/etc/netplan/00-installer-config.yaml
+  notify:
+    netplan apply
 
 - name: Setting DHCPD - copy configuration
   template:

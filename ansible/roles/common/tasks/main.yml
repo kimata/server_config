@@ -5,11 +5,22 @@
   with_items:
     - emacs-nox
     - git
+    - tig
     - htop
     - lsb-release
-    - ntp
     - tmux
     - zsh
+    - silversearcher-ag
+
+- name: Change Apt Repository
+  replace:
+    path: /etc/apt/sources.list
+    regexp: 'http://archive\.ubuntu\.com'
+    replace: 'http://jp.archive.ubuntu.com'
+
+- name: Setting Timezone
+  timezone:
+    name: Asia/Tokyo
     
 - name: Generate Locales
   locale_gen:
@@ -49,6 +60,13 @@
     - { name: 10-equipment.conf,  path: /etc/rsyslog.d }
   notify: restart rsyslog
 
+
+- name: Install NTPD server
+  apt:
+    pkg=ntp
+    state=present
+  when: ntp_server is defined
+
 - name: Setting NTPD server
   template:
     src=ntp/ntp.conf-server.j2 dest=/etc/ntp.conf
@@ -58,12 +76,11 @@
   notify: restart ntp
 
 - name: Setting NTPD client
-  template:
-    src=ntp/ntp.conf-client.j2 dest=/etc/ntp.conf
-    owner=ntp
-    group=ntp
-  when: ntp_server is not defined
-  notify: restart ntp
+  replace:
+    path: /etc/systemd/timesyncd.conf
+    regexp: '^#NTP='
+    replace: 'NTP={{ network.ntp }}'
+  notify: restart timesyncd
 
 # Local Variables:
 # mode: yaml
