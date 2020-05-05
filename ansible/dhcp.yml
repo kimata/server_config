@@ -13,6 +13,7 @@
     - dns
     - dhcp
     - ddns
+    - rproxy
 
   tasks:
     - name: Install Packages - server

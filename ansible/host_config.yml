@@ -168,11 +168,11 @@ device:
   #   addr: 192.168.2.52
 
   # モバイル
-  - name: phone-iphone
+  - name: phone-iphone-old
     mac: 68:ab:1e:5d:82:3a
     addr: 192.168.2.60
 
-  - name: phone-iphone-old
+  - name: phone-iphone-old2
     mac: 64:a5:c3:d6:a9:17
     addr: 192.168.2.61
     
@@ -187,6 +187,18 @@ device:
   - name: nintendo-switch
     mac:  64:b5:c6:c2:fd:04
     addr: 192.168.2.64
+
+  - name: phone-iphone
+    mac: 88:a4:79:13:2f:1d
+    addr: 192.168.2.65
+
+  - name: tablet-ipadmini
+    mac: e0:b5:5f:14:e9:2f
+    addr: 192.168.2.66
+
+  - name: tablet-ipad-old
+    mac: 4c:b1:99:12:19:d5
+    addr: 192.168.2.67
     
   # メディアプレーヤー
   - name: speaker-echo

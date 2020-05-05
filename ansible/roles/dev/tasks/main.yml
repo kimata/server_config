@@ -3,14 +3,14 @@
     pkg={{ item }}
     state=present
   with_items:
-    - tig
-    - htop
-    - tmux
     - zsh
+    - tmux
+    - keychain
     - silversearcher-ag
     - autojump
-    - tmux
-    - zsh
+    - git
+    - tig
+    - htop
 
 - name: Setting dircolors
   become: no
