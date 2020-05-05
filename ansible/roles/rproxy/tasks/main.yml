@@ -1,0 +1,54 @@
+- name: Install Packages
+  apt: 
+    pkg={{ item }}
+    state=present
+  with_items:
+    - nginx
+
+# - name: Checking config file existence
+#   stat: path=/var/cache/bind/db.{{ network.domain }}-internal
+#   register: bind_local_db
+
+# - name: Setting BIND - copy configuration
+#   template:
+#     src=bind/{{ item.name }}.j2 dest=/etc/bind/{{ item.name }}
+#     owner={{ item.owner }}
+#     group={{ item.group }}
+#   with_items:
+#     - { name: named.conf,           owner: root, group: bind }
+#     - { name: named.conf.options,   owner: root, group: bind }
+#     - { name: named.conf.zones,     owner: root, group: bind }
+#     - { name: db.127,               owner: root, group: bind }
+#     - { name: db.local,             owner: root, group: bind }
+#     - { name: db.ddns.net,          owner: root, group: bind }
+#   notify: restart bind
+
+# - name: Setting BIND - copy root db
+#   get_url:
+#     url=https://www.internic.net/domain/named.root
+#     dest=/etc/bind/db.root
+
+- name: Setting Nginx
+  template:
+    src=nginx/green-rabbit.ddns.net.j2 dest=/etc/nginx/sites-enabled/green-rabbit.ddns.net
+  notify: restart nginx
+
+# - name: Setting BIND - remove cache
+#   file: path=/var/cache/bind/{{ item }}.jnl state=absent
+#   with_items:
+#     - db.{{ network.zone }}
+#     - db.{{ network.domain }}-internal
+#   when: not bind_local_db.stat.exists
+#   notify: restart bind
+  
+# - name: Setting BIND - make directory
+#   file:
+#     path=/var/log/named state=directory
+#     owner=bind
+#     group=bind
+#   notify: restart bind
+
+# Local Variables:
+# mode: yaml
+# tab-width: 4
+# End:
