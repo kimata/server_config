@@ -5,8 +5,13 @@
     fstype: ext4
     state: present
 
-- name: load zfs
-  shell: modprobe zfs
+- name: update grub
+  shell: update-grub
+
+- name: load kernel modules
+  systemd:
+    name: systemd-modules-load.service
+    state: restarted
     
 - name: restart samba
   service: name=smbd state=restarted

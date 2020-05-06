@@ -14,9 +14,13 @@
 
 - name: Setting Kernel Modules
   lineinfile:
-    dest=/etc/modules line=zfs
+    dest=/etc/modules-load.d/modules.conf
+    line={{ item }}
+  with_items:
+    - zfs
+    - acpi_ipmi
   notify:
-    load zfs
+    load kernel modules
 
 - name: Setting ZFS Permission
   file:
