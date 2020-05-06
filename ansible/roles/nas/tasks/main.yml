@@ -29,7 +29,14 @@
 - name: Setting ZED
   replace:
     dest=/etc/zfs/zed.d/zed.rc regexp='^#ZED_NOTIFY_VERBOSE=0' replace='ZED_NOTIFY_VERBOSE=1'
-    
+
+- name: Setting GRUB
+  lineinfile:
+    path: /etc/default/grub
+    line: GRUB_RECORDFAIL_TIMEOUT=1
+  notify:
+    update grub
+
 - name: Create Mount Point
   file:
     path={{ item }} state=directory
