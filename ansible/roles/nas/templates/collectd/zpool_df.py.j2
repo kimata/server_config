@@ -56,8 +56,10 @@ interval = (os.getenv('COLLECTD_INTERVAL') and float(os.getenv('COLLECTD_INTERVA
 while True:
   for name, info in get_zpool_info_map().items():
     for item, value in info.items():
-      print 'PUTVAL %s/%s/%s-%s-%s interval=%s N:%d' % (
-        hostname, PLUGIN_NAME, 'gauge', name, item, interval, value
+      print(
+        'PUTVAL %s/%s/%s-%s-%s interval=%s N:%d' % (
+          hostname, PLUGIN_NAME, 'gauge', name, item, interval, value
+        )
       )
   sys.stdout.flush()
   time.sleep(interval)
