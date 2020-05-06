@@ -2,11 +2,11 @@
 ################################################################################
 # zplug 設定
 ################################################################################
-if [ ! -f ~/.zplug/init.zsh ]; then
-    echo "Installing zplug..."
-    unsetopt BG_NICE
-    curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
-fi
+# if [ ! -f ~/.zplug/init.zsh ]; then
+#     echo "Installing zplug..."
+#     unsetopt BG_NICE
+#     curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
+# fi
 source ~/.zplug/init.zsh
 zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-history-substring-search"
