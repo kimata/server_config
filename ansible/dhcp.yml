@@ -4,6 +4,7 @@
 
   vars_files: 
     - host_config.yml
+    - wifi_config.yml
     - ddyns_config.yml
 
   become: yes
@@ -14,6 +15,7 @@
     - dhcp
     - ddns
     - rproxy
+    - mail
 
   tasks:
     - name: Install Packages - server

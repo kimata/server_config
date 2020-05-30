@@ -1,0 +1,33 @@
+- name: Install Packages
+  apt:
+    pkg={{ item }}
+    state=present
+  with_items:
+    - postfix
+
+- name: Setting Postfix relayhost
+  replace:
+    dest=/etc/postfix/main.cf
+    regexp={{item.regexp}}
+    replace={{item.replace}}
+  with_items:
+    - { regexp: '^myhostname =.*', replace: 'myhostname = {{ network.root_mail.split("@") | last }}' }
+    - { regexp: '^relayhost =.*', replace: 'relayhost = [smtp.gmail.com]:587' }
+    - { regexp: '^mynetworks =.*', replace: 'mynetworks = 127.0.0.0/8 {{ network.subnet }}/24 [::ffff:127.0.0.0]/104 [::1]/128' }
+  notify: restart postfix
+
+- name: Setting Postfix authentication
+  blockinfile:
+    dest: /etc/postfix/main.cf
+    content: |
+      smtp_use_tls = yes
+      smtp_sasl_auth_enable = yes
+      smtp_sasl_password_maps = hash:/etc/postfix/sasl/passwd
+      smtp_sasl_tls_security_options = noanonymous
+      smtp_sasl_mechanism_filter = plain
+  notify: restart postfix
+
+# Local Variables:
+# mode: yaml
+# tab-width: 4
+# End:

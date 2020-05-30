@@ -1,0 +1,14 @@
+- hosts: all
+  vars_files: 
+    - host_config.yml
+    - zabbix_config.yml
+
+  become: yes
+
+  roles:
+    # - common
+    - zabbix
+
+  handlers:
+
+  tasks:

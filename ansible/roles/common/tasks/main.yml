@@ -7,6 +7,10 @@
     - git
     - lsb-release
 
+- name: Gather package facts
+  package_facts:
+    manager: apt
+    
 - name: Change Apt Repository
   replace:
     path: /etc/apt/sources.list
@@ -34,6 +38,14 @@
   notify:
     reload sysctl
 
+- name: Setting GRUB
+  lineinfile:
+    path=/etc/default/grub
+    regexp='^GRUB_RECORDFAIL_TIMEOUT=.*'
+    line='GRUB_RECORDFAIL_TIMEOUT=1'
+  notify:
+    update grub
+    
 - name: Setting Sudo
   template:
     src=sudo/sudoers.j2 dest=/etc/sudoers
@@ -56,13 +68,13 @@
   notify: restart rsyslog
 
 
-- name: Install NTPD server
+- name: Install NTP server
   apt:
     pkg=ntp
     state=present
   when: ntp_server is defined
 
-- name: Setting NTPD server
+- name: Setting NTP server
   template:
     src=ntp/ntp.conf-server.j2 dest=/etc/ntp.conf
     owner=ntp
@@ -70,7 +82,17 @@
   when: ntp_server is defined
   notify: restart ntp
 
-- name: Setting NTPD client
+- name: Setting ntpdate
+  blockinfile:
+    dest: '/etc/rc.local'
+    content: |
+      sudo /etc/init.d/ntp stop
+      ntpdate ntp.nict.jp
+      sudo /etc/init.d/ntp start
+    insertafter: '^#!/.*'
+  when: ntp_server is defined
+
+- name: Setting NTP client
   replace:
     path: /etc/systemd/timesyncd.conf
     regexp: '^#NTP='

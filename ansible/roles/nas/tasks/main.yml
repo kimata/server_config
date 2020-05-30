@@ -9,7 +9,6 @@
     - collectd
     - hddtemp
     - nfs-kernel-server
-    - apcupsd
     - prometheus-node-exporter
 
 - name: Setting Kernel Modules
@@ -28,14 +27,9 @@
 
 - name: Setting ZED
   replace:
-    dest=/etc/zfs/zed.d/zed.rc regexp='^#ZED_NOTIFY_VERBOSE=0' replace='ZED_NOTIFY_VERBOSE=1'
-
-- name: Setting GRUB
-  lineinfile:
-    path: /etc/default/grub
-    line: GRUB_RECORDFAIL_TIMEOUT=1
-  notify:
-    update grub
+    dest=/etc/zfs/zed.d/zed.rc
+    regexp='^#ZED_NOTIFY_VERBOSE=0'
+    replace='ZED_NOTIFY_VERBOSE=1'
 
 - name: Create Mount Point
   file:
@@ -58,10 +52,12 @@
 
 - name: Setting Postfix
   lineinfile:
-    dest={{item.dest}} line={{item.line}}
+    dest={{item.dest}}
+    regexp={{item.regexp}}
+    line={{item.line}}
   with_items:
-    - { dest: '/etc/postfix/main.cf', line: "relayhost = [mail.{{network.domain}}]" }
-    - { dest: '/etc/aliases', line: "root: {{network.root_mail}}" }
+    - { dest: '/etc/postfix/main.cf', regexp: '^relayhost =.*', line: "relayhost = [mail.{{network.domain}}]" }
+    - { dest: '/etc/aliases', regexp: '^root:.*', line: "root: {{network.root_mail}}" }
   notify:
     update mail alias
 
@@ -88,12 +84,6 @@
     - { src: 'collectd/zpool_df.py.j2', dest: '/usr/lib/collectd/zpool_df.py', mode: '0755' }
   notify:
     restart collectd
-
-- name: Setting APC UPS
-  template:
-    src=apcupsd/apcupsd.conf.j2 dest=/etc/apcupsd/apcupsd.conf
-  notify:
-    restart apcupsd
 
 # Local Variables:
 # mode: yaml

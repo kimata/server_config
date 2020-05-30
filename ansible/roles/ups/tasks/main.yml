@@ -1,0 +1,17 @@
+- name: Install Packages
+  apt:
+    pkg={{ item }}
+    state=present
+  with_items:
+    - apcupsd
+
+- name: Setting APC UPS
+  template:
+    src=apcupsd/apcupsd.conf.j2 dest=/etc/apcupsd/apcupsd.conf
+  notify:
+    restart apcupsd
+
+# Local Variables:
+# mode: yaml
+# tab-width: 4
+# End:

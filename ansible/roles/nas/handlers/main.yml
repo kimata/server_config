@@ -5,9 +5,6 @@
     fstype: ext4
     state: present
 
-- name: update grub
-  shell: update-grub
-
 - name: load kernel modules
   systemd:
     name: systemd-modules-load.service

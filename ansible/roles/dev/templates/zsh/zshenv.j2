@@ -123,7 +123,7 @@ if (which colordiff >& /dev/null) then	# diff
     alias diff=colordiff
 fi
 
-for editor in vim vi			# editor
+for editor in emacs vim vi              # editor
 do
   if (which $editor >& /dev/null) then
       export EDITOR=$editor

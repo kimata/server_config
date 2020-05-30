@@ -3,6 +3,7 @@
     pkg={{ item }}
     state=present
   with_items:
+    - emacs-nox
     - zsh
     - tmux
     - keychain
@@ -11,6 +12,7 @@
     - git
     - tig
     - htop
+    - cmigemo
 
 - name: Setting dircolors
   become: no
@@ -30,16 +32,29 @@
     - zshenv
     - zshrc
 
-- name: Setting Emacs
-  become: no
-  template:
-    src=emacs/init.el.j2 dest=~/.emacs.d/init.el
-
 - name: Setting zplug
   become: no
   git:
     repo: https://github.com/zplug/zplug.git
     dest: .zplug
+
+- name: Settign Emacs (create directory)
+  become: no
+  file:
+    path=~/.emacs.d
+    state=directory
+
+- name: Setting Emacs
+  become: no
+  template:
+    src=emacs/init.el.j2 dest=~/.emacs.d/init.el
+
+- name: Settign Emacs (root)
+  file: 
+    src=/home/{{ ansible_env.SUDO_USER }}/.emacs.d
+    dest=~/.emacs.d
+    force=yes
+    state=link
 
 - name: Setting Default Shell
   user:

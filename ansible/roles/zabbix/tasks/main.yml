@@ -1,0 +1,63 @@
+# - name: Download Zabbix 5.0 deb
+#   get_url:
+#     url: 'https://repo.zabbix.com/zabbix/5.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_5.0-1+{{ansible_distribution_release}}_all.deb'
+#     dest: '/tmp/zabbix.deb'
+
+# - name: Install Zabbix
+#   apt:
+#     deb: '/tmp/zabbix.deb'
+
+- name: Install Packages
+  apt:
+    pkg: '{{ item }}'
+    update_cache: 'yes'
+  with_items:
+    - zabbix-server-mysql
+    - zabbix-frontend-php
+    - zabbix-apache-conf
+    - zabbix-agent
+    - python3-pexpect
+    - python3-pymysql
+
+# - name: Initialize MySQL
+#   expect:
+#     command: mysql_secure_installation
+#     responses:
+#       'Enter current password for root': ''
+#       'Set root password': 'Y'
+#       'New password': '{{mysql_pass}}'
+#       'Re-enter new password': '{{mysql_pass}}'
+#       'Remove anonymous users': 'y'
+#       'Disallow root login remotely': 'y'
+#       'Remove test database and access to it': 'y'
+#       'Reload privilege tables now': 'y'
+
+- name: check if DB exists
+  shell: mysql -e 'SHOW DATABASES;' | grep zabbix
+  register: db_exist
+  failed_when: db_exist.rc == 2
+
+- name: Create MySQL databases
+  mysql_db:
+    name: zabbix 
+    encoding: 'utf8 '
+    collation: 'utf8_bin'
+    login_user: 'root'
+    login_password: '{{mysql_pass}}'
+  when: db_exist.rc != 0
+
+- name: Add MySQL user
+  mysql_user:
+    name: zabbix
+    password: zabbix
+    priv: 'zabbix.*:ALL'
+  when: db_exist.rc != 0
+
+- name: Initialze Database
+  shell: |
+    sudo mysql -uroot -p "{{mysql_pass}}" zabbix -e "set global innodb_strict_mode='OFF'"
+    zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p 'zabbix' zabbix
+    sudo mysql -uroot -p "{{mysql_pass}}" zabbix -e "set global innodb_strict_mode='ON'"
+  when: db_exist.rc != 0
+
+  
