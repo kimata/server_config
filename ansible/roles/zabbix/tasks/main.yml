@@ -9,41 +9,37 @@
 
 - name: Install Packages
   apt:
-    pkg: '{{ item }}'
+    pkg:
+      - zabbix-server-mysql
+      - zabbix-frontend-php
+      - zabbix-apache-conf
+      - zabbix-agent
+      - python3-pexpect
+      - python3-pymysql
+      - fonts-mplus
+      - snmp
+      - snmp-mibs-downloader
+      
     update_cache: 'yes'
-  with_items:
-    - zabbix-server-mysql
-    - zabbix-frontend-php
-    - zabbix-apache-conf
-    - zabbix-agent
-    - python3-pexpect
-    - python3-pymysql
 
-# - name: Initialize MySQL
-#   expect:
-#     command: mysql_secure_installation
-#     responses:
-#       'Enter current password for root': ''
-#       'Set root password': 'Y'
-#       'New password': '{{mysql_pass}}'
-#       'Re-enter new password': '{{mysql_pass}}'
-#       'Remove anonymous users': 'y'
-#       'Disallow root login remotely': 'y'
-#       'Remove test database and access to it': 'y'
-#       'Reload privilege tables now': 'y'
+- name: Initialize MySQL
+  shell: |
+    mysql -e "SET PASSWORD FOR root@localhost = PASSWORD('{{mysql_pass}}'); FLUSH PRIVILEGES;" 
+    printf "{{mysql_pass}}\n n\n n\n n\n y\n y\n y\n" | sudo mysql_secure_installation
 
 - name: check if DB exists
-  shell: mysql -e 'SHOW DATABASES;' | grep zabbix
+  shell: mysql -uroot -p{{mysql_pass}} -e "SHOW DATABASES;" | grep zabbix
   register: db_exist
   failed_when: db_exist.rc == 2
 
 - name: Create MySQL databases
   mysql_db:
-    name: zabbix 
-    encoding: 'utf8 '
+    name: 'zabbix'
+    encoding: 'utf8'
     collation: 'utf8_bin'
     login_user: 'root'
     login_password: '{{mysql_pass}}'
+  no_log: 'yes'
   when: db_exist.rc != 0
 
 - name: Add MySQL user
@@ -51,13 +47,58 @@
     name: zabbix
     password: zabbix
     priv: 'zabbix.*:ALL'
+    login_user: 'root'
+    login_password: '{{mysql_pass}}'
+  no_log: 'yes'
   when: db_exist.rc != 0
 
 - name: Initialze Database
   shell: |
-    sudo mysql -uroot -p "{{mysql_pass}}" zabbix -e "set global innodb_strict_mode='OFF'"
-    zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p 'zabbix' zabbix
-    sudo mysql -uroot -p "{{mysql_pass}}" zabbix -e "set global innodb_strict_mode='ON'"
+     mysql -uroot -p{{mysql_pass}} zabbix -e "set global innodb_strict_mode='OFF'"
+     zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -pzabbix zabbix
+     mysql -uroot -p{{mysql_pass}} zabbix -e "set global innodb_strict_mode='ON'"
   when: db_exist.rc != 0
 
-  
+- name: Setting Zabbix server
+  lineinfile:
+    path: '/etc/zabbix/zabbix_server.conf'
+    regexp: '^DBPassword=.*$'
+    line: 'DBPassword=zabbix'
+  notify:
+    restart zabbix server
+
+- name: Enable Zabbix service
+  systemd:
+    name: '{{item}}'
+    enabled: yes
+  with_items:
+    - zabbix-server.service
+    - zabbix-agent.service
+
+- name: Setting Zabbix frontend
+  lineinfile:
+    path: '/etc/zabbix/apache.conf'
+    regexp: '^ +# php_value date.timezone .*$'
+    line: '        php_value date.timezone Asia/Tokyo'
+  notify:
+    restart apache
+
+- name: Setting Font
+  file: 
+    src: '/usr/share/fonts/truetype/mplus/mplus-1p-regular.ttf'
+    dest: '/etc/alternatives/zabbix-frontend-font'
+    state: 'link'
+    force: 'yes'
+   
+- name: Install YAMAHA Private MIB
+  unarchive:
+    src: 'http://www.rtpro.yamaha.co.jp/RT/docs/mib/yamaha-private-mib.tar.gz'
+    dest: '/usr/share/snmp/mibs'
+    remote_src: 'yes'
+
+- name: Setting SNMP
+  lineinfile:
+    path: '/etc/snmp/snmp.conf'
+    regexp: '^mibs.*$'
+    line: 'mibs all'
+
