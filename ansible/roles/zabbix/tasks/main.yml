@@ -89,12 +89,6 @@
     dest: '/etc/alternatives/zabbix-frontend-font'
     state: 'link'
     force: 'yes'
-   
-- name: Install YAMAHA Private MIB
-  unarchive:
-    src: 'http://www.rtpro.yamaha.co.jp/RT/docs/mib/yamaha-private-mib.tar.gz'
-    dest: '/usr/share/snmp/mibs'
-    remote_src: 'yes'
 
 - name: Setting SNMP
   lineinfile:

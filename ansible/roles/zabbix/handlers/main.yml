@@ -1,0 +1,12 @@
+- name: restart zabbix server
+  systemd: name={{item}} state=restarted
+  with_items:
+    - zabbix-server
+    - zabbix-agent 
+
+- name: restart apache
+  systemd: name=apache2 state=restarted
+
+
+
+  
