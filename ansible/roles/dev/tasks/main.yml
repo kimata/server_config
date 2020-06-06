@@ -49,14 +49,19 @@
   template:
     src=emacs/init.el.j2 dest=~/.emacs.d/init.el
 
-- name: Settign Emacs (root)
-  file: 
-    src=/home/{{ ansible_env.SUDO_USER }}/.emacs.d
-    dest=~/.emacs.d
-    force=yes
-    state=link
+- name: Settign Emacs for root (create directory)
+  become: yes
+  file:
+    path=/root/.emacs.d
+    state=directory
+    
+- name: Setting Emacs for root
+  become: yes
+  template:
+    src=emacs/init.el.j2 dest=/root/.emacs.d/init.el
 
 - name: Setting Default Shell
+  become: yes
   user:
     name: "{{ ansible_env.SUDO_USER }}"
     shell: /bin/zsh

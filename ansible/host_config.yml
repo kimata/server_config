@@ -11,6 +11,7 @@ network:
   lease_end: 192.168.2.239 # MEMO: 240-250 は VPN 用にルータでプール
   zone: 2.168.192
   influxdb: 192.168.2.20
+  zabbix: zabbix.green-rabbit.net
   root_mail: root@dripper.green-rabbit.net
 
 user:
@@ -85,6 +86,10 @@ device:
     mac: 3c:a8:2a:a0:70:dc
     addr: 192.168.2.28
 
+  - name: zabbix
+    mac: 00:0c:29:0a:02:c4
+    addr: 192.168.2.29
+    
   - name: columbia-ctrl
     mac: 00:9c:02:9d:fe:5a
     addr: 192.168.2.30

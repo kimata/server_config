@@ -1,0 +1,85 @@
+- name: Install Packages
+  apt:
+    pkg:
+      - influxdb
+      - apt-transport-https
+      - software-properties-common
+
+- name: Gather package facts
+  package_facts:
+    manager: apt
+
+- name: Fetch Fluentd installer
+  uri:
+    url: 'https://toolbelt.treasuredata.com/sh/install-ubuntu-bionic-td-agent3.sh'
+    return_content: yes
+  register: fluentd_installer
+  when: '"td-agent" not in ansible_facts.packages'
+  
+- name: Install Fluentd
+  shell: '{{ fluentd_installer.content }}'
+  when: '"td-agent" not in ansible_facts.packages'
+
+- name: Fetch Grafana key
+  apt_key:
+    url: 'https://packages.grafana.com/gpg.key'
+  when: '"grafana" not in ansible_facts.packages'
+
+- name: Install Grafana
+  apt_repository:
+    repo: 'deb https://packages.grafana.com/oss/deb stable main'
+  when: '"grafana" not in ansible_facts.packages'
+
+- name: Install Packages
+  apt:
+    pkg:
+      - grafana
+      - influxdb
+      - influxdb-client
+    update_cache: yes
+
+- name: Setting Grafana
+  ini_file:
+    path: '/etc/grafana/grafana.ini'
+    section: '{{item.section}}'
+    option: '{{item.option}}'
+    value: '{{item.value}}'
+  with_items:
+    - section: 'server'
+      option: 'root_url'
+      value: '%(protocol)s://%(domain)s:/grafana'
+    - section: 'smtp'
+      option: 'enabled'
+      value: 'true'
+    - section: 'smtp'
+      option: 'host'
+      value: 'localhost:25'
+    - section: 'smtp'
+      option: 'skip_verify'
+      value: 'true'
+  notify:
+    restart grafana
+
+- name: Enable Grafana service
+  systemd:
+    name: 'grafana-server'
+    enabled: yes
+
+- name: Setting fluentd
+  template:
+    src: 'fluentd/td-agent.conf.j2'
+    dest: '/etc/td-agent/td-agent.conf'
+  notify:
+    restart fluentd
+
+- name: Install Fluentd plugin
+  gem:
+    name: '{{item}}'
+    executable: 'td-agent-gem'
+    user_install: no
+  with_items:
+    - 'fluent-plugin-filter_typecast'
+    - 'fluent-plugin-influxdb'
+  notify:
+    restart fluentd
+

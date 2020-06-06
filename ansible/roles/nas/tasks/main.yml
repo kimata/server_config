@@ -1,15 +1,13 @@
 - name: Install Packages
   apt:
-    pkg={{ item }}
-    state=present
-  with_items:
-    - samba
-    - postfix
-    - zfsutils-linux
-    - collectd
-    - hddtemp
-    - nfs-kernel-server
-    - prometheus-node-exporter
+    pkg:
+      - samba
+      - zfsutils-linux
+      - collectd
+      - hddtemp
+      - nfs-kernel-server
+      - prometheus-node-exporter
+      - zabbix-agent
 
 - name: Setting Kernel Modules
   lineinfile:
@@ -50,17 +48,6 @@
   notify:
     restart samba
 
-- name: Setting Postfix
-  lineinfile:
-    dest={{item.dest}}
-    regexp={{item.regexp}}
-    line={{item.line}}
-  with_items:
-    - { dest: '/etc/postfix/main.cf', regexp: '^relayhost =.*', line: "relayhost = [mail.{{network.domain}}]" }
-    - { dest: '/etc/aliases', regexp: '^root:.*', line: "root: {{network.root_mail}}" }
-  notify:
-    update mail alias
-
 # - name: Disable multipath
 #   blockinfile:
 #     dest: /etc/multipath.conf
@@ -85,7 +72,43 @@
   notify:
     restart collectd
 
+- name: Setting Zabbix agent
+  lineinfile:
+    dest: '/etc/zabbix/zabbix_agentd.conf'
+    regexp: '{{item.regexp}}'
+    line: '{{item.line}}'
+  with_items:
+    - regexp: '^Server=.*$'
+      line: 'Server={{network.zabbix}}'
+    - regexp: '^ServerActive=.*$'
+      line: 'ServerActive={{network.zabbix}}'
+    - regexp: '^Include=.*$'
+      line: 'Include=/etc/zabbix/zabbix_agentd.conf.d/'
+  notify: restart zabbix agent
+
+- name: Install Zabbix userparameter for ZFS on Linux 
+  get_url:
+    url: 'https://raw.githubusercontent.com/Cosium/zabbix_zfs-on-linux/master/userparameters/ZoL_with_sudo.conf'
+    dest: '/etc/zabbix/zabbix_agentd.conf.d/'
+  notify: restart zabbix agent
+
+- name: Allow any user to use read-only ZFS commands
+  blockinfile:
+    dest: /etc/sudoers.d/zfs
+    content: |
+      Cmnd_Alias C_ZFS = \
+        /sbin/zfs "", /sbin/zfs help *, \
+        /sbin/zfs get, /sbin/zfs get *, \
+        /sbin/zfs list, /sbin/zfs list *, \
+        /sbin/zpool "", /sbin/zpool help *, \
+        /sbin/zpool iostat, /sbin/zpool iostat *, \
+        /sbin/zpool list, /sbin/zpool list *, \
+        /sbin/zpool status, /sbin/zpool status *, \
+        /sbin/zpool upgrade, /sbin/zpool upgrade -v
+      ALL ALL = (root) NOPASSWD: C_ZFS
+
 # Local Variables:
 # mode: yaml
 # tab-width: 4
 # End:
+

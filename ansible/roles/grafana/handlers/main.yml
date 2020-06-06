@@ -1,0 +1,5 @@
+- name: restart grafana
+  systemd: name=grafana-server state=restarted
+
+- name: restart fluentd
+  systemd: name=td-agent state=restarted

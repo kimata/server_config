@@ -11,11 +11,6 @@
   handlers:
 
   tasks:
-    - name: Install Packages
-      apt:
-        update-cache=yes
-        pkg={{ item }}
-        state=present
-      with_items:
-        - zfsutils-linux
+
+
 

@@ -7,7 +7,7 @@
 
 - name: load kernel modules
   systemd:
-    name: systemd-modules-load.service
+    name: systemd-modules-load
     state: restarted
     
 - name: restart samba
@@ -19,11 +19,13 @@
 - name: restart collectd
   service: name=collectd state=restarted
   
-- name: update mail alias
-  shell: newaliases
-
 - name: restart apcupsd
   service: name=apcupsd state=restarted
+
+- name: restart zabbix agent
+  systemd:
+    name: zabbix-agent
+    state: restarted
 
 # Local Variables:
 # mode: yaml

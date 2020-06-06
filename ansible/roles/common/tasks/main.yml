@@ -1,12 +1,11 @@
 - name: Install Packages
   apt:
-    pkg={{ item }}
-    state=present
-  with_items:
-    - emacs-nox
-    - git
-    - lsb-release
-
+    pkg:
+      - emacs-nox
+      - git
+      - lsb-release
+      - postfix
+    
 - name: Gather package facts
   package_facts:
     manager: apt
@@ -99,6 +98,17 @@
     replace: 'NTP={{ network.ntp }}'
   notify: restart timesyncd
 
+- name: Setting Postfix
+  lineinfile:
+    dest={{item.dest}}
+    regexp={{item.regexp}}
+    line={{item.line}}
+  with_items:
+    - { dest: '/etc/postfix/main.cf', regexp: '^relayhost =.*', line: 'relayhost = [mail.{{network.domain}}]' }
+    - { dest: '/etc/aliases', regexp: '^root:.*', line: "root: {{network.root_mail}}" }
+  notify:
+    restart postfix
+  
 # Local Variables:
 # mode: yaml
 # tab-width: 4

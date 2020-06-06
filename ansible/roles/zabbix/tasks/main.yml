@@ -62,11 +62,16 @@
 - name: Setting Zabbix server
   lineinfile:
     path: '/etc/zabbix/zabbix_server.conf'
-    regexp: '^DBPassword=.*$'
-    line: 'DBPassword=zabbix'
+    regexp: '{{item.regexp}}'
+    line: '{{item.line}}'
+  with_items:
+    - regexp: '^DBPassword=.*$'
+      line: 'DBPassword=zabbix'
+    - regexp: '^#? *StartIPMIPollers=.*$'
+      line: 'StartIPMIPollers=1'
   notify:
     restart zabbix server
-
+    
 - name: Enable Zabbix service
   systemd:
     name: '{{item}}'
