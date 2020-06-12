@@ -98,6 +98,16 @@
     replace: 'NTP={{ network.ntp }}'
   notify: restart timesyncd
 
+- name: Disable sleep
+  systemd:
+    name: '{{item}}'
+    masked: 'yes'
+  with_items:
+    - sleep.target
+    - suspend.target
+    - hibernate.target
+    - hybrid-sleep.target
+
 # Local Variables:
 # mode: yaml
 # tab-width: 4
