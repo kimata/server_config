@@ -72,6 +72,11 @@
   notify:
     restart fluentd
 
+- name: Enable Fluentd service
+  systemd:
+    name: 'td-agent'
+    enabled: yes
+
 - name: Install Fluentd plugin
   gem:
     name: '{{item}}'
