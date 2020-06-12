@@ -93,7 +93,7 @@ if [[ ($TERM == xterm*) || (-z $SSH_CLIENT && -z $EMACS) ]]; then
             fi
         fi
         # emacs
-	local EMACS_VERSION=${${${(f)"$(emacs --version)"}[1]}##GNU Emacs }
+        local EMACS_VERSION=${${${(f)"$(emacs --version)"}[1]}##GNU Emacs }
         if [[ $EMACS_VERSION > 22.9 ]] then
             =emacs --daemon >& /dev/null
         fi
@@ -102,7 +102,7 @@ if [[ ($TERM == xterm*) || (-z $SSH_CLIENT && -z $EMACS) ]]; then
     elif (which =keychain >& /dev/null) then
         keychain ~/.ssh/*.id_rsa
         if [[ -e ~/.keychain/`hostname`-sh ]]; then
-	    source ~/.keychain/`hostname`-sh >& /dev/null
+            source ~/.keychain/`hostname`-sh >& /dev/null
         fi
         # clear
     fi
