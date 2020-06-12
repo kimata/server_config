@@ -83,3 +83,18 @@
   notify:
     restart fluentd
 
+- name: Setting InfluxDB
+  ini_file:
+    path: '/etc/influxdb/influxdb.conf'
+    section: '{{item.section}}'
+    option: '{{item.option}}'
+    value: '{{item.value}}'
+  with_items:
+    - section: 'data'
+      option: 'query-log-enabled'
+      value: 'false'
+    - section: 'http'
+      option: 'log-enabled'
+      value: 'false'
+  notify: restart influxdb
+
