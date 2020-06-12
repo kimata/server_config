@@ -107,6 +107,17 @@
         /sbin/zpool upgrade, /sbin/zpool upgrade -v
       ALL ALL = (root) NOPASSWD: C_ZFS
 
+- name: Setting Postfix
+  lineinfile:
+    dest={{item.dest}}
+    regexp={{item.regexp}}
+    line={{item.line}}
+  with_items:
+    - { dest: '/etc/postfix/main.cf', regexp: '^relayhost =.*', line: 'relayhost = [mail.{{network.domain}}]' }
+    - { dest: '/etc/aliases', regexp: '^root:.*', line: "root: {{network.root_mail}}" }
+  notify:
+    restart postfix
+
 # Local Variables:
 # mode: yaml
 # tab-width: 4

@@ -27,6 +27,14 @@
     name: zabbix-agent
     state: restarted
 
+- name: restart postfix 1
+  systemd: name=ssh state=restarted
+  listen: restart postfix
+
+- name: restart postfix 2
+  shell: newaliases
+  listen: restart postfix
+
 # Local Variables:
 # mode: yaml
 # tab-width: 4
