@@ -86,10 +86,10 @@ stty stop undef
 if [[ ($TERM == xterm*) || (-z $SSH_CLIENT && -z $EMACS) ]]; then
     if [[ -z $TMUX_PANE ]]; then
         # keychain
-        if (which =keychain >& /dev/null) then
-            keychain ~/.ssh/*.id_rsa
-            if [[ -e ~/.keychain/`hostname`-sh ]]; then
-                    source ~/.keychain/`hostname`-sh >& /dev/null
+        if [[ -n ~/.ssh/*.id_rsa(#qN) ]]; then
+            if (which =keychain >& /dev/null) then
+                keychain ~/.ssh/*.id_rsa
+                source ~/.keychain/`hostname`-sh >& /dev/null
             fi
         fi
         # emacs
