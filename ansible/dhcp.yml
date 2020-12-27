@@ -1,4 +1,4 @@
-- hosts: dhcp
+- hosts: all
   vars:
     ntp_server: true
 
