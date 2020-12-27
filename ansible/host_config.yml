@@ -144,7 +144,7 @@ device:
     addr: 192.168.2.42
 
   - name: printer-prusa
-    mac: b8:27:eb:02:47:81
+    mac: b8:27:eb:07:83:48
     addr: 192.168.2.43
 
   # パソコン
@@ -254,9 +254,13 @@ device:
     def_name: true
 
   # センサー
+  - name: esp32-outdoor-1
+    mac: 30:ae:a4:14:bc:e0
+    addr: 192.168.2.90
+
   - name: esp32-outdoor
     mac: a4:cf:12:24:fa:e8
-    addr: 192.168.2.90
+    addr: 192.168.2.97
 
   - name: esp32-outdoor2
     # mac: 30:ae:a4:05:a3:d4
@@ -269,8 +273,12 @@ device:
     
   - name: esp32-indoor2
     mac: 30:ae:a4:28:8a:e8
+    addr: 192.168.2.97
+
+  - name: esp32-indoor-2
+    mac: 3c:71:bf:ff:5d:7c
     addr: 192.168.2.93
-    
+
   - name: esp32-rain
     mac: 30:ae:a4:21:7a:a4
     addr: 192.168.2.94
@@ -305,7 +313,7 @@ device:
     addr: 192.168.2.105
 
   - name: rasp-water
-    mac: b8:27:eb:91:48:44
+    mac: b8:27:eb:61:bf:1f
     addr: 192.168.2.106
 
   - name: rasp-storeroom
