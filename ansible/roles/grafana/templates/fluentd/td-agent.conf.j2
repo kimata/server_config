@@ -25,9 +25,9 @@
 ################################################################################
 # 処理
 ################################################################################
-<filter sensor.**>
+<filter {sensor.**,fplug.**}>
   @type typecast
-  types temp:float,humi:float,lux:float,rain:float
+  types temp:float,humi:float,lux:float,rain:float,pm10:float,pm25:float,pm40:float,pm100:float,uva:float,uvb:float,uvi:float
 </filter>
 
 <match sensor>
@@ -62,6 +62,11 @@
   tag_keys ["hostname"]
   time_precision s
   flush_interval 10
+</match>
+
+<match test.**>
+  @type file
+  path /dev/shm/fluent_test.log
 </match>
 
 <match fluent.{warn,error}>
