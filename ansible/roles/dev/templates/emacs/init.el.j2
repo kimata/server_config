@@ -19,6 +19,7 @@
 (set-default 'buffer-file-coding-system 'utf-8-unix)
 
 ; タブ
+(setq-default c-basic-offset 4)                 ; インデント
 (setq-default tab-width 4)                      ; タブ幅は 4
 (setq-default indent-tabs-mode nil)             ; タブはスペースに変換
 (setq-default indent-level 4)                   ; インデント幅は 4
@@ -49,6 +50,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; 便利機能
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ; 自動保存
 (package-install 'auto-save-buffers-enhanced)
 (auto-save-buffers-enhanced t)
@@ -131,6 +133,11 @@
 (define-key global-map (kbd "C-x C-b") 'ibuffer)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 永続化
+(package-install 'stash)
+(defstash kill-ring "kill-ring.el" nil (or stashed 'nil))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; バックアップ
 (setq make-backup-files t)                      ; バックアップを作成
 (setq vc-make-backup-files t)                   ; VC の管理下にあっても作成
@@ -147,6 +154,7 @@
 (package-install 'ruby-mode)
 (package-install 'perl-mode)
 (package-install 'yaml-mode)
+(package-install 'vue-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; その他
@@ -154,16 +162,3 @@
 ; #! で始まっていればファイル保存時に実行権限を与える
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
-
-; サイズ 0 のファイルは削除
-(if (not (memq 'delete-file-if-no-contents after-save-hook))
-    (setq after-save-hook
-          (cons 'delete-file-if-no-contents after-save-hook)))
-(defun delete-file-if-no-contents ()
-  (when (and
-         (buffer-file-name (current-buffer))
-         (= (point-min) (point-max)))
-    (when (y-or-n-p "Delete file and kill buffer?")
-      (delete-file
-       (buffer-file-name (current-buffer)))
-      (kill-buffer (current-buffer)))))
