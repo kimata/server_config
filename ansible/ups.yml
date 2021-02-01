@@ -1,0 +1,12 @@
+- hosts: all
+  vars_files: 
+    - host_config.yml
+
+  become: yes
+
+  roles:
+    - ups
+
+  handlers:
+
+  tasks:

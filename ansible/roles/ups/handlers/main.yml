@@ -1,0 +1,15 @@
+- name: reload udev rules
+  shell: udevadm control --reload-rules
+  listen: "reload udev"
+
+- name: trigger udev
+  shell: udevadm trigger   
+  listen: "reload udev"
+
+- name: restart nut-server
+  service: name=nut-server state=restarted
+
+# Local Variables:
+# mode: yaml
+# tab-width: 4
+# End:
