@@ -1,13 +1,11 @@
 - name: Install Packages
   apt:
-    pkg:
-      - samba
-      - zfsutils-linux
-      - collectd
-      - hddtemp
-      - nfs-kernel-server
-      - prometheus-node-exporter
-      - zabbix-agent
+    pkg: [
+      'samba', 'zfsutils-linux', 'collectd', 'hddtemp',
+      'nfs-kernel-server', 'prometheus-node-exporter',
+      'zabbix-agent', 'nut-client'
+    ]
+    state: present
 
 - name: Setting Kernel Modules
   lineinfile:
@@ -118,8 +116,22 @@
   notify:
     restart postfix
 
+- name: Setting NUT - nut.conf
+  replace:
+    path: '/etc/nut/nut.conf'
+    regexp: '^#?MODE=.*'
+    replace: 'MODE=netclient'
+
+- name: Setting NUT - upsmon.conf
+  blockinfile:
+    dest: '/etc/nut/upsmon.conf'
+    content: |
+      MONITOR {{ ups.nas }} 1 upsmon upspass master
+    insertbefore: EOF
+
 # Local Variables:
 # mode: yaml
 # tab-width: 4
 # End:
+
 

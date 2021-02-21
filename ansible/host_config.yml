@@ -17,6 +17,10 @@ network:
 user:
   - kimata
 
+ups:
+  nas: bl50t@columbia
+
+
 device:
   # ネットワーク機器
   - name: wifi-english
