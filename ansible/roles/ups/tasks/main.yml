@@ -1,11 +1,33 @@
 - name: Install Packages
   apt:
-    pkg: [ 'apcupsd', 'nut', 'nut-client' ]
+    pkg: [ 'nut' ]
     state: present
+
+- name: Setting NUT - udev
+  template:
+    src: 'udev/90-omron-ups.rules.j2'
+    dest: '/etc/udev/rules.d/90-omron-ups.rules'
+
+- name: Setting NUT - modify systemd definition
+  lineinfile:
+    path: '/lib/systemd/system/nut-server.service'
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+    insertbefore: '{{ item.insertbefore }}'
+  with_items:
+    - regexp: 'After=.*'
+      line: 'After=nut-driver.service network-online.target sys-subsystem-ups-devices-1\x2d1.device'
+      insertbefore: '^\[Service\]'
+    - regexp: 'WantedBy=.*'
+      line: 'WantedBy=network-online.target sys-subsystem-ups-devices-1\x2d1.device'
+      insertbefore: 'EOF'
+    - regexp: 'BindsTo=.*'
+      line: 'BindsTo=sys-subsystem-ups-devices-1\x2d1.device'
+      insertbefore: '^\[Service\]'
 
 - name: Setting NUT - nut.conf
   replace:
-    path: /etc/nut/nut.conf
+    path: '/etc/nut/nut.conf'
     regexp: '^#?MODE=.*'
     replace: 'MODE=netserver'
 
