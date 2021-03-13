@@ -128,6 +128,7 @@
     content: |
       MONITOR {{ ups.nas }} 1 upsmon upspass master
     insertbefore: EOF
+  notify: restart nut-client
 
 # Local Variables:
 # mode: yaml

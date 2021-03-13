@@ -35,6 +35,9 @@
   shell: newaliases
   listen: restart postfix
 
+- name: restart nut-client
+  service: name=nut-client state=restarted
+
 # Local Variables:
 # mode: yaml
 # tab-width: 4
