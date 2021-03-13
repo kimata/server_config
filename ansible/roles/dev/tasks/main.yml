@@ -1,18 +1,18 @@
 - name: Install Packages
-  apt:
-    pkg:
-      - emacs-nox
+  become: "{{ should_be_root }}"
+  package:
+    name:
+      - "{{ 'emacs-nox' if ansible_pkg_mgr != 'homebrew' else 'emacs' }}"
       - zsh
       - tmux
       - keychain
-      - silversearcher-ag
+      - "{{ 'silversearcher-ag' if ansible_pkg_mgr != 'homebrew' else 'the_silver_searcher' }}"
       - autojump
       - git
       - tig
       - htop
       - cmigemo
       - colordiff
-    state: 'present'
 
 - name: Setting dircolors
   become: no
@@ -50,21 +50,21 @@
     src=emacs/init.el.j2 dest=~/.emacs.d/init.el
 
 - name: Settign Emacs for root (create directory)
-  become: yes
   file:
     path=/root/.emacs.d
     state=directory
-    
+  when: should_be_root
+
 - name: Setting Emacs for root
-  become: yes
   template:
     src=emacs/init.el.j2 dest=/root/.emacs.d/init.el
+  when: should_be_root
 
 - name: Setting Default Shell
-  become: yes
   user:
     name: "{{ ansible_env.SUDO_USER }}"
     shell: /bin/zsh
+  when: ansible_pkg_mgr != 'homebrew'
 
 # Local Variables:
 # mode: yaml

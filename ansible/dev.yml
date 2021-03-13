@@ -2,6 +2,9 @@
   vars_files:
     - host_config.yml
 
+  vars:
+    should_be_root:  "{{ ansible_pkg_mgr != 'homebrew' }}"
+
   become: yes
 
   roles:
