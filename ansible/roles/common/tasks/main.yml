@@ -1,11 +1,8 @@
 - name: Install Packages
   apt:
-    pkg:
-      - emacs-nox
-      - git
-      - lsb-release
-      - postfix
-    
+    pkg: [ 'emacs-nox', 'git', 'lsb-release', 'postfix' ]
+    update_cache: yes
+
 - name: Gather package facts
   package_facts:
     manager: apt
