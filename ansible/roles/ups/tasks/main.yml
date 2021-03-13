@@ -2,6 +2,7 @@
   apt:
     pkg: [ 'nut' ]
     state: present
+    update_cache: yes
 
 - name: Setting NUT - udev
   template:
@@ -16,13 +17,13 @@
     insertbefore: '{{ item.insertbefore }}'
   with_items:
     - regexp: 'After=.*'
-      line: 'After=nut-driver.service network-online.target sys-subsystem-ups-devices-1\x2d1.device'
+      line: 'After=nut-driver.service network-online.target sys-subsystem-ups-devices-ups.device'
       insertbefore: '^\[Service\]'
     - regexp: 'WantedBy=.*'
-      line: 'WantedBy=network-online.target sys-subsystem-ups-devices-1\x2d1.device'
+      line: 'WantedBy=network-online.target sys-subsystem-ups-devices-ups.device'
       insertbefore: 'EOF'
     - regexp: 'BindsTo=.*'
-      line: 'BindsTo=sys-subsystem-ups-devices-1\x2d1.device'
+      line: 'BindsTo=sys-subsystem-ups-devices-ups.device'
       insertbefore: '^\[Service\]'
 
 - name: Setting NUT - nut.conf

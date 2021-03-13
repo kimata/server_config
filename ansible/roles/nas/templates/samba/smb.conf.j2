@@ -4,7 +4,7 @@
     workgroup = COFFEE
     server string       = Samba on {{ ansible_hostname | upper }}
 
-    hosts allow         = {{ network.subnet | regex_replace('\.0$', '.') }} 127. fe80::/10
+    hosts allow         = {{ network.subnet | regex_replace('\.\d+\.0$', '.') }} 127. fe80::/10
 
     printing            = bsd
     printcap name       = /dev/null
