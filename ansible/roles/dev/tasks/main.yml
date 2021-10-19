@@ -66,6 +66,11 @@
     shell: /bin/zsh
   when: ansible_pkg_mgr != 'homebrew'
 
+- name: Setting Git
+  become: no
+  template:
+    src=git/gitconfig.j2 dest=~/.gitconfig
+
 # Local Variables:
 # mode: yaml
 # tab-width: 4
