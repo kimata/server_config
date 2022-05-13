@@ -1,7 +1,7 @@
 - name: Install Packages
   apt:
     pkg: [
-      'samba', 'zfsutils-linux', 'hddtemp',
+      'samba', 'zfsutils-linux',
       'nfs-kernel-server', 'prometheus-node-exporter',
       'zabbix-agent', 'nut-client'
     ]
@@ -54,12 +54,6 @@
 #       blacklist {
 #           devnode "^sd[a-z]"
 #       }
-
-- name: Setting Hddtemp
-  replace:
-    dest=/etc/default/hddtemp regexp='^RUN_DAEMON=.*$' replace='RUN_DAEMON="true"'
-  notify:
-    restart hddtemp
 
 - name: Setting Zabbix agent
   lineinfile:
