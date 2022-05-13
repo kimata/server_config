@@ -1,7 +1,7 @@
 - name: Install Packages
   apt:
     pkg: [
-      'samba', 'zfsutils-linux', 'collectd', 'hddtemp',
+      'samba', 'zfsutils-linux', 'hddtemp',
       'nfs-kernel-server', 'prometheus-node-exporter',
       'zabbix-agent', 'nut-client'
     ]
@@ -60,15 +60,6 @@
     dest=/etc/default/hddtemp regexp='^RUN_DAEMON=.*$' replace='RUN_DAEMON="true"'
   notify:
     restart hddtemp
-
-- name: Setting Collectd
-  template:
-    src={{item.src}} dest={{item.dest}} mode={{item.mode}}
-  with_items:
-    - { src: 'collectd/collectd.conf.j2', dest: '/etc/collectd/collectd.conf', mode: '0644' }
-    - { src: 'collectd/zpool_df.py.j2', dest: '/usr/lib/collectd/zpool_df.py', mode: '0755' }
-  notify:
-    restart collectd
 
 - name: Setting Zabbix agent
   lineinfile:

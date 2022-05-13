@@ -16,9 +16,6 @@
 - name: restart hddtemp
   service: name=hddtemp state=restarted
   
-- name: restart collectd
-  service: name=collectd state=restarted
-  
 - name: restart apcupsd
   service: name=apcupsd state=restarted
 
