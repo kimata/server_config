@@ -71,6 +71,10 @@
   template:
     src=git/gitconfig.j2 dest=~/.gitconfig
 
+- name: Install Delta
+  apt:
+    deb: https://github.com/dandavison/delta/releases/download/0.13.0/git-delta_0.13.0_amd64.deb
+
 # Local Variables:
 # mode: yaml
 # tab-width: 4
