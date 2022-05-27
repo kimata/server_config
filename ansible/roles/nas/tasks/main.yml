@@ -35,6 +35,11 @@
     - /storage
     - /backup
 
+- name: "Check if EFI firmaware path exists"
+  stat:
+    path: '/sys/firmware/efi '
+  register: efi
+
 - name: Setting mount
   template:
     src=mount/fstab.j2 dest=/etc/fstab
