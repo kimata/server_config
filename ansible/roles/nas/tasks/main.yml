@@ -37,7 +37,7 @@
 
 - name: "Check if EFI firmaware path exists"
   stat:
-    path: '/sys/firmware/efi '
+    path: '/sys/firmware/efi'
   register: efi
 
 - name: Setting mount
