@@ -5,6 +5,7 @@ network:
   domain: green-rabbit.net
   gateway: 192.168.2.1 
   dns: 192.168.2.2
+  mail: dripper
   ntp: ntp.nict.jp
   dhcp: 192.168.2.2
   lease_start: 192.168.2.160
@@ -12,7 +13,6 @@ network:
   zone: 2.168.192
   influxdb: 192.168.2.20
   zabbix: zabbix.green-rabbit.net
-  root_mail: root@dripper.green-rabbit.net
 
 user:
   - kimata
