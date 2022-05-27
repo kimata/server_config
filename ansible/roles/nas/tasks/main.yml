@@ -3,7 +3,8 @@
     pkg: [
       'samba', 'zfsutils-linux',
       'nfs-kernel-server', 'prometheus-node-exporter',
-      'zabbix-agent', 'nut-client'
+      'zabbix-agent', 'nut-client', 'net-tools',
+      # 'plocate'
     ]
     state: present
 
