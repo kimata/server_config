@@ -43,18 +43,27 @@
 
     kernel oplocks      = yes
 
+    follow symlinks     = yes
     unix extensions     = no
     wide links          = yes
 
     create mask         = 0644
     directory mask      = 0755
 
-    vfs objects         = recycle
+    vfs objects         = recycle shadow_copy2 fruit streams_xattr
+
     recycle:keeptree    = yes
     recycle:touch       = yes
     recycle:versions    = yes
     recycle:maxsize     = 0
     recycle:exclude     = *.tmp
+
+    shadow:snapdir      = .zfs/snapshot
+    shadow:sort         = desc
+    shadow:format       = _%Y-%m-%d_%H:%M:%S
+    shadow:snapprefix   = ^autosnap
+    shadow:delimiter    = _
+    shadow:localtime    = yes
 
 [ストレージ]
     path                = /storage
