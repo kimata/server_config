@@ -7,8 +7,9 @@ server {
     proxy_set_header Host $http_host;
     
     location /grafana/ {
-        proxy_pass http://192.168.2.20:3000/;
+        proxy_pass http://192.168.0.10:3000/;
     }
+
     # location ~ ^/octoprint/(?<pathinfo>.*) {
     #     proxy_pass http://192.168.2.43/$pathinfo;
     #   
