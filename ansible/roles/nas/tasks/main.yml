@@ -76,6 +76,13 @@
     dest: '/etc/zabbix/zabbix_agentd.conf.d/'
   notify: restart zabbix agent
 
+- name: Setting ZFS option
+  lineinfile:
+    dest: '/etc/modprobe.d/zfs.conf'
+    regexp: '^options zfs zfs_dmu_offset_next_sync=.*'
+    line: 'options zfs zfs_dmu_offset_next_sync=1'
+    create: yes
+
 - name: Allow any user to use read-only ZFS commands
   blockinfile:
     dest: /etc/sudoers.d/zfs
