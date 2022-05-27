@@ -106,9 +106,15 @@ alias nl='nl -ba'                       # nl
 alias df='df -h'                        # df
 
 alias bell='echo -ne "\a"'              # bell
-alias reset='echo -ne "\eP\ec\e\\" && =reset && clear' # reset
-
+alias reset='echo -ne "\eP\ec\e\\" && =reset && clear && tmux clear-history > /dev/null 2>&1' # reset
 alias lshw='lshw -disable scsi'         # lshw
+
+if (which exa >& /dev/null) then	# diff
+    alias ls=exa
+fi
+if (which duf >& /dev/null) then	# diff
+    alias df=duf
+fi
 
 ################################################################################
 # グローバルエイリアス
