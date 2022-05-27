@@ -25,7 +25,7 @@
 ################################################################################
 # 処理
 ################################################################################
-<filter {sensor.**,fplug.**}>
+<filter {sensor.**,fplug.**,wemo.**}>
   @type typecast
   types temp:float,humi:float,lux:float,rain:float,pm10:float,pm25:float,pm40:float,pm100:float,uva:float,uvb:float,uvi:float
 </filter>
