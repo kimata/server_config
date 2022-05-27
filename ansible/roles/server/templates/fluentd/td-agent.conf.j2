@@ -25,14 +25,32 @@
 ################################################################################
 # 処理
 ################################################################################
+<filter {sensor.**,fplug.**,wemo.**}>
+  @type typecast
+  types temp:float,humi:float,lux:float,rain:float,pm10:float,pm25:float,pm40:float,pm100:float,uva:float,uvb:float,uvi:float
+</filter>
+
 <match sensor>
-  type rewrite_tag_filter
-  rewriterule1 hostname ESP32 sensor.esp32
-  rewriterule2 hostname rasp sensor.raspberrypi
+  @type rewrite_tag_filter
+  <rule>
+    key     hostname
+    pattern ESP32
+    tag     sensor.esp32
+  </rule>
+  <rule>
+    key     hostname
+    pattern rasp
+    tag     sensor.raspberrypi
+  </rule>
+  <rule>
+    key     hostname
+    pattern rpi-cm4
+    tag     sensor.raspberrypi
+  </rule>
 </match>
 
-<filter {sensor.esp32,fplug.**}>
-  type record_transformer
+<filter {sensor.esp32,fplug.**,wemo.**}>
+  @type record_transformer
   enable_ruby
   renew_time_key self_time
   auto_typecast
@@ -42,17 +60,8 @@
   </record>
 </filter>
 
-<filter sensor.**>
-  type typecast
-  types temp:float,humi:gloat,lux:float,rain:float
-</filter>
-
-<match {sensor.**,fplug.**}>
+<match {sensor.**,fplug.**,wemo.**}>
   @type copy
-  <store>
-    @type file
-    path /tmp/fluentd_debug.log
-  </store>
   <store>
     @type influxdb
     host localhost
@@ -61,25 +70,29 @@
     time_precision s
     flush_interval 10
   </store>
+  <store>
+    @type file
+    path /dev/shm/td-agent.dump
+  </store>
 </match>
 
-<filter test.**>
-  type record_transformer
-  enable_ruby
-  renew_time_key self_time
-  <record>
-       self_time ${Time.now.to_i - record["self_time"].to_i }
-  </record>
-</filter>
+# <filter test.**>
+#   type record_transformer
+#   enable_ruby
+#   renew_time_key self_time
+#   <record>
+#        self_time ${Time.now.to_i - record["self_time"].to_i }
+#   </record>
+# </filter>
 
 <match test.**>
   @type file
-  tag_keys ["hostname"]
-  path /tmp/fluentd_test.log
+  path /dev/shm/fluentd_test.log
 </match>
 
-<match debug.**>
-  @type stdout
+<match fluent.{warn,error}>
+  @type file
+  path /var/log/td-agent/fluent.log
 </match>
 
 # Local Variables:
