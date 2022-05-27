@@ -71,9 +71,15 @@
   template:
     src=git/gitconfig.j2 dest=~/.gitconfig
 
-- name: Install Delta
+- name: Install Delta (x86)
   apt:
     deb: https://github.com/dandavison/delta/releases/download/0.13.0/git-delta_0.13.0_amd64.deb
+  when: ansible_architecture == 'x86_64'
+
+- name: Install Delta (ARM)
+  apt:
+    deb: https://github.com/dandavison/delta/releases/download/0.13.0/git-delta_0.13.0_arm64.deb
+  when: ansible_architecture == 'aarch64'
 
 # Local Variables:
 # mode: yaml
