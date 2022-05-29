@@ -110,7 +110,7 @@ alias reset='echo -ne "\eP\ec\e\\" && =reset && clear && tmux clear-history > /d
 alias lshw='lshw -disable scsi'         # lshw
 
 if (which exa >& /dev/null) then	# diff
-    alias ls=exa
+    alias ls='exa --color=always'
 fi
 if (which duf >& /dev/null) then	# diff
     alias df=duf
