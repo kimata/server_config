@@ -139,7 +139,7 @@ alias -g P='| perl -pe "s/\e\[\d+(;\d+)?m//g" | col -bx'
 # サフィックスエイリアス
 ################################################################################
 if is-at-least 4.2; then
-    alias -s {tar.gz,tar.Z,tgz,tar,gz,zip,tar,bz2,tbz2,bz2,lzh,rar,Z}='muncompress'
+    alias -s {tar.gz,tar.Z,tgz,tar,gz,zip,tar,bz2,tbz2,bz2,lzh,rar,Z,xz}='muncompress'
 fi
 
 muncompress () {
@@ -158,6 +158,7 @@ muncompress () {
           *.lzh    ) lha x      $file ;;
           *.rar    ) rar x      $file ;;
           *.Z      ) uncompress $file ;;
+          *.xz     ) xz -d       $file ;;
 	      *)
               echo "Can't decide how to uncompress $file."
               ;;
