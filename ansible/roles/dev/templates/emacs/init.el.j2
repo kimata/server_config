@@ -8,7 +8,7 @@
 (add-to-list 'package-archives '("org"   . "http://orgmode.org/elpa/"))
 
 (package-initialize)
-(unless package-archive-contents (package-refresh-contents)) 
+(unless package-archive-contents (package-refresh-contents))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; 基本設定
@@ -93,9 +93,6 @@
 (define-key helm-map            (kbd "C-z"      ) 'helm-select-action)
 ; NOTE: helm-find-files では C-j でディレクトリオープン．C-l で上のディレクトリ移動．
 
-; 補完
-(global-set-key (kbd "C-M-_") 'dabbrev-completion)
-
 ; ファイルが更新されたら読み込み直す
 (global-auto-revert-mode 1)
 
@@ -156,6 +153,33 @@
 (package-install 'perl-mode)
 (package-install 'yaml-mode)
 (package-install 'vue-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 補完
+(global-set-key (kbd "C-M-_") 'dabbrev-completion)
+
+(package-install 'company)
+(global-company-mode)
+(setq company-require-match 'never)
+
+(package-install 'eglot)
+(require 'eglot)
+(add-to-list 'eglot-server-programs '(python-mode . ("pyls")))
+(add-hook 'python-mode-hook 'eglot-ensure)
+
+(define-key eglot-mode-map (kbd "M-e") #'flymake-goto-next-error)
+(define-key eglot-mode-map (kbd "M-E") #'flymake-goto-prev-error)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; エラーチェック
+(require 'flymake)
+(set-face-background 'flymake-errline "orange red")
+(set-face-foreground 'flymake-errline "black")
+(set-face-underline 'flymake-error t)
+
+(package-install 'flymake-diagnostic-at-point)
+(require 'flymake-diagnostic-at-point)
+(add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; その他
