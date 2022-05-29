@@ -66,14 +66,17 @@ fi
 if (which dircolors >& /dev/null) then	# dircolors
    eval `dircolors ~/.dircolors`
 fi
-if (which gnuls >& /dev/null) then
+
+if (which exa >& /dev/null) then	    # ls
+    alias ls='exa --color=auto'
+elif (which gnuls >& /dev/null) then
     alias ls='gnuls -F --color=auto'
 elif (uname | grep Linux >& /dev/null) then
     alias ls='ls -F --color=auto'
 else
     alias ls='ls -FG'
 fi
-     
+
 if (which colordiff >& /dev/null) then	# diff
     alias diff=colordiff
 fi
@@ -109,10 +112,7 @@ alias bell='echo -ne "\a"'              # bell
 alias reset='echo -ne "\eP\ec\e\\" && =reset && clear && tmux clear-history > /dev/null 2>&1' # reset
 alias lshw='lshw -disable scsi'         # lshw
 
-if (which exa >& /dev/null) then	# diff
-    alias ls='exa --color=always'
-fi
-if (which duf >& /dev/null) then	# diff
+if (which duf >& /dev/null) then	    # df
     alias df=duf
 fi
 
