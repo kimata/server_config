@@ -1,85 +1,76 @@
-- name: Install Packages
-  become: "{{ should_be_root }}"
-  package:
-    name:
-      - "{{ 'emacs-nox' if ansible_pkg_mgr != 'homebrew' else 'emacs' }}"
-      - zsh
-      - tmux
-      - keychain
-      - "{{ 'silversearcher-ag' if ansible_pkg_mgr != 'homebrew' else 'the_silver_searcher' }}"
-      - autojump
-      - git
-      - tig
-      - htop
-      - cmigemo
-      - colordiff
+-   name: Install Packages
+    become: '{{ should_be_root }}'
+    package:
+        name:
+        -   "{{ 'emacs-nox' if ansible_pkg_mgr != 'homebrew' else 'emacs' }}"
+        -   zsh
+        -   tmux
+        -   keychain
+        -   "{{ 'silversearcher-ag' if ansible_pkg_mgr != 'homebrew' else 'the_silver_searcher' }}"
+        -   autojump
+        -   git
+        -   tig
+        -   htop
+        -   cmigemo
+        -   colordiff
+        -   python-is-python3
 
-- name: Setting dircolors
-  become: no
-  template:
-    src=dircolors/dircolors.j2 dest=~/.dircolors
+-   name: Setting dircolors
+    become: no
+    template: src=dircolors/dircolors.j2 dest=~/.dircolors
 
-- name: Setting tmux
-  become: no
-  template:
-    src=tmux/tmux.conf.j2 dest=~/.tmux.conf
+-   name: Setting tmux
+    become: no
+    template: src=tmux/tmux.conf.j2 dest=~/.tmux.conf
 
-- name: Setting Zsh
-  become: no
-  template:
-    src=zsh/{{ item }}.j2 dest=~/.{{ item }}
-  with_items:
-    - zshenv
-    - zshrc
+-   name: Setting Zsh
+    become: no
+    template: src=zsh/{{ item }}.j2 dest=~/.{{ item }}
+    with_items:
+    -   zshenv
+    -   zshrc
 
-- name: Setting zplug
-  become: no
-  git:
-    repo: https://github.com/zplug/zplug.git
-    dest: .zplug
+-   name: Setting zplug
+    become: no
+    git:
+        repo: https://github.com/zplug/zplug.git
+        dest: .zplug
 
-- name: Settign Emacs (create directory)
-  become: no
-  file:
-    path=~/.emacs.d
-    state=directory
+-   name: Settign Emacs (create directory)
+    become: no
+    file: path=~/.emacs.d state=directory
 
-- name: Setting Emacs
-  become: no
-  template:
-    src=emacs/init.el.j2 dest=~/.emacs.d/init.el
+-   name: Setting Emacs
+    become: no
+    template: src=emacs/init.el.j2 dest=~/.emacs.d/init.el
 
-- name: Settign Emacs for root (create directory)
-  file:
-    path=/root/.emacs.d
-    state=directory
-  when: should_be_root
+-   name: Settign Emacs for root (create directory)
+    file: path=/root/.emacs.d state=directory
+    when: should_be_root
 
-- name: Setting Emacs for root
-  template:
-    src=emacs/init.el.j2 dest=/root/.emacs.d/init.el
-  when: should_be_root
+-   name: Setting Emacs for root
+    template: src=emacs/init.el.j2 dest=/root/.emacs.d/init.el
+    when: should_be_root
 
-- name: Setting Default Shell
-  user:
-    name: "{{ ansible_env.SUDO_USER }}"
-    shell: /bin/zsh
-  when: ansible_pkg_mgr != 'homebrew'
+-   name: Setting Default Shell
+    user:
+        name: '{{ ansible_env.SUDO_USER }}'
+        shell: /bin/zsh
+    when: ansible_pkg_mgr != 'homebrew'
 
-- name: Setting Git
-  become: no
-  template:
-    src=git/gitconfig.j2 dest=~/.gitconfig
+-   name: Setting Git
+    become: no
+    template: src=git/gitconfig.j2 dest=~/.gitconfig
 
-- name: Install Delta (x86)
-  apt:
-    deb: https://github.com/dandavison/delta/releases/download/0.13.0/git-delta_0.13.0_amd64.deb
-  when: ansible_architecture == 'x86_64'
+-   name: Install Delta (x86)
+    apt:
+        deb: https://github.com/dandavison/delta/releases/download/0.13.0/git-delta_0.13.0_amd64.deb
+    when: ansible_architecture == 'x86_64'
 
-- name: Install Delta (ARM)
-  apt:
-    deb: https://github.com/dandavison/delta/releases/download/0.13.0/git-delta_0.13.0_arm64.deb
-  when: ansible_architecture == 'aarch64'
+-   name: Install Delta (ARM)
+    apt:
+        deb: https://github.com/dandavison/delta/releases/download/0.13.0/git-delta_0.13.0_arm64.deb
+    when: ansible_architecture == 'aarch64'
 
 # Local Variables:
 # mode: yaml
