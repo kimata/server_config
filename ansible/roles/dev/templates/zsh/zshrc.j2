@@ -159,7 +159,7 @@ if [[ ($TERM == xterm*) || (-z $SSH_CLIENT && -z $EMACS) ]]; then
             =emacs --daemon >& /dev/null
         fi
         # tmux
-        tmux a || tmux || echo 'Unable to start tmux.'
+        tmux a -d || tmux || echo 'Unable to start tmux.'
     elif if [[ -n ~/.ssh/*.id_rsa(#qN) ]]; then
         if (which =keychain >& /dev/null) then
             keychain ~/.ssh/*.id_rsa
