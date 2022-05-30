@@ -158,7 +158,7 @@ ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=215'
 ################################################################################
 stty stop undef
 if [[ ($TERM == xterm*) || (-z $SSH_CLIENT && -z $EMACS) ]]; then
-    if [[ -z $TMUX_PANE && -z $SSH_CONNECTION ]]; then
+    if [[ -z $TMUX_PANE ]]; then
         # keychain
         if [[ -n ~/.ssh/*.id_rsa(#qN) ]]; then
             if (which =keychain >& /dev/null) then
