@@ -23,7 +23,7 @@ ChallengeResponseAuthentication no
 
 AllowTcpForwarding              yes
 GatewayPorts                    no
-X11Forwarding                   no 
+X11Forwarding                   no
 
 ClientAliveInterval             10s
 ClientAliveCountMax             5
@@ -37,6 +37,8 @@ KeepAlive                       yes
 PermitUserEnvironment           yes
 Compression                     yes
 MaxStartups                     3
+
+AcceptEnv                       TMUX_PANE
 
 Subsystem                       sftp internal-sftp
 
