@@ -25,11 +25,13 @@ zplug "zsh-users/zaw", defer:2
 # tmux
 ################################################################################
 # ssh した時にウィンドウ名に接続先ホスト名を表示
-function ssh() {
-    tmux rename-window "ssh[${@: -1:1}]"
-    command ssh "$@"
-    tmux rename-window "zsh"
-}
+if [[ -n $TMUX_PANE  ]]; then
+    function ssh() {
+        tmux rename-window "ssh[${@:-1:1]}]"
+        command ssh "$@"
+        tmux rename-window "zsh"
+    }
+fi
 
 
 ################################################################################
