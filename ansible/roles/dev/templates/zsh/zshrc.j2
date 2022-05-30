@@ -65,7 +65,7 @@ j() {
         cd $(autojump $@)
         return
     fi
-    cd "$(autojump -s | sed '/_____/Q; s/^[0-9,.:]*\s*//' |  fzf-tmux --inline-info)" 
+    cd "$(autojump -s | sed '/_____/Q; s/^[0-9,.:]*\s*//' |  fzf-tmux --inline-info)"
 }
 
 fe() {
@@ -125,7 +125,7 @@ esac
 
 case `whoami` in
      root) ucolor=red;;
-     *)    ucolor=green;;   
+     *)    ucolor=green;;
 esac
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
