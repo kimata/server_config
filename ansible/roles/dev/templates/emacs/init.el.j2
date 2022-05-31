@@ -136,6 +136,13 @@
 (defstash kill-ring "kill-ring.el" nil (or stashed 'nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Git
+(package-install 'magit)
+(package-install 'magit-delta)
+(global-set-key (kbd "C-x g") 'magit-status)
+(add-hook 'magit-mode-hook (lambda () (magit-delta-mode +1)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; バックアップ
 (setq make-backup-files t)                      ; バックアップを作成
 (setq vc-make-backup-files t)                   ; VC の管理下にあっても作成
@@ -175,7 +182,6 @@
 (require 'flymake)
 (set-face-background 'flymake-errline "orange red")
 (set-face-foreground 'flymake-errline "black")
-(set-face-underline 'flymake-error t)
 
 (package-install 'flymake-diagnostic-at-point)
 (require 'flymake-diagnostic-at-point)
