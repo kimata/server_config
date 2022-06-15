@@ -31,7 +31,8 @@
         -   python3-pyls
         -   exa
         -   duf
-    when: (ansible_distribution_version | int) >= 22.04
+        -   plocate
+    when: (ansible_distribution_version | float) >= 22.04
 
 -   name: Setting dircolors
     become: no
