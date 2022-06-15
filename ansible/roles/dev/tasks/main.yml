@@ -17,6 +17,12 @@
         -   black
         -   zoxide
 
+-   name: Dump facts for debugging playbook
+    delegate_to: localhost
+    copy:
+        content: '{{ hostvars[inventory_hostname] | to_nice_json }}'
+        dest: /dev/shm/ansible_facts_{{inventory_hostname}}.json
+
 -   name: Install Packages (Ubuntu 22.04)
     become: '{{ should_be_root }}'
     package:
