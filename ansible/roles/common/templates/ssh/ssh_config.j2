@@ -1,0 +1,11 @@
+Host *
+     ControlMaster  auto
+     ControlPath    ~/.ssh/mux/%r@%h:%p
+     ControlPersist     10
+     ServerAliveInterval 60
+     ServerAliveCountMax 10
+     ForwardAgent   yes
+     Compression    yes
+     HashKnownHosts     no
+     PreferredAuthentications publickey
+     SendEnv TMUX_PANE
