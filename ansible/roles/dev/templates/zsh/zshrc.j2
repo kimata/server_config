@@ -167,12 +167,13 @@ stty stop undef
 if [[ ($TERM == xterm*) || (-z $SSH_CLIENT && -z $EMACS) ]]; then
     if [[ -z $TMUX_PANE ]]; then
         # keychain
-        if [[ -n ~/.ssh/*.id_rsa(#qN) ]]; then
+        if [[ -n ~/.ssh/*.id_*(#qN) ]]; then
             if (which =keychain >& /dev/null) then
-                keychain ~/.ssh/*.id_rsa
-                source ~/.keychain/`hostname`-sh >& /dev/null
+               keychain ~/.ssh/*.id_*
+               source ~/.keychain/`hostname`-sh >& /dev/null
             fi
         fi
+
         # emacs
         local EMACS_VERSION=${${${(f)"$(emacs --version)"}[1]}##GNU Emacs }
         if [[ $EMACS_VERSION > 22.9 ]] then
@@ -180,14 +181,12 @@ if [[ ($TERM == xterm*) || (-z $SSH_CLIENT && -z $EMACS) ]]; then
         fi
         # tmux
         tmux a -d || tmux || echo 'Unable to start tmux.'
-    elif if [[ -n ~/.ssh/*.id_rsa(#qN) ]]; then
-        if (which =keychain >& /dev/null) then
-            keychain ~/.ssh/*.id_rsa
-            if [[ -e ~/.keychain/`hostname`-sh ]]; then
-                source ~/.keychain/`hostname`-sh >& /dev/null
-            fi
+    else
+        # keychain
+        if [[ -e ~/.keychain/`hostname`-sh ]]; then
+            source ~/.keychain/`hostname`-sh >& /dev/null
         fi
-        # clear
+        clear
     fi
 fi
 
