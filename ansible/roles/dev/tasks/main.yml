@@ -28,6 +28,7 @@
     package:
         name:
         -   pre-commit
+        -   python3-pyls
         -   exa
         -   duf
     when: (ansible_distribution_version | int) >= 22.04
