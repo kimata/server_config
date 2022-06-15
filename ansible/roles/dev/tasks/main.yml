@@ -14,7 +14,8 @@
         -   cmigemo
         -   colordiff
         -   python-is-python3
-        -   python3-pyls
+        -   black
+        -   zoxide
 
 -   name: Install Packages (Ubuntu 22.04)
     become: '{{ should_be_root }}'
