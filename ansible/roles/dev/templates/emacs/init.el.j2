@@ -170,6 +170,15 @@
               (add-hook 'before-save-hook
                         'python-black-buffer nil t)))
 
+(package-install 'rustic)
+(setq rustic-lsp-client 'eglot)
+(add-hook 'rustic-mode-hook
+          (lambda ()
+            (flycheck-mode +1)
+            (setq rustic-format-trigger 'on-save)
+            (when (executable-find "rust-analyzer")
+              (setq rustic-lsp-server 'rust-analyzer))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; 補完
 (global-set-key (kbd "C-M-_") 'dabbrev-completion)
