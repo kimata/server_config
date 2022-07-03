@@ -15,7 +15,6 @@
         -   colordiff
         -   python-is-python3
         -   black
-        -   zoxide
 
 -   name: Dump facts for debugging playbook
     delegate_to: localhost
@@ -32,6 +31,7 @@
         -   exa
         -   duf
         -   plocate
+        -   zoxide
     when: (ansible_distribution_version | float) >= 22.04
 
 -   name: Setting dircolors
