@@ -170,6 +170,19 @@
               (add-hook 'before-save-hook
                         'python-black-buffer nil t)))
 
+(package-install 'typescript-mode)
+(package-install 'tide)
+(add-hook 'typescript-mode-hook
+		  (lambda ()
+			(interactive)
+			(tide-setup)
+			(flycheck-mode +1)
+			(setq flycheck-check-syntax-automatically '(save mode-enabled))
+			(eldoc-mode +1)
+			(tide-hl-identifier-mode +1)
+			(company-mode +1)
+			(global-set-key (kbd "M-*") 'tide-jump-back)))
+
 (package-install 'rustic)
 (setq rustic-lsp-client 'eglot)
 (add-hook 'rustic-mode-hook
