@@ -1,0 +1,192 @@
+-   name: Install Packages
+    become: '{{ should_be_root }}'
+    package:
+        name:
+        -   unzip
+        -   dkms
+        -   docker.io
+        -   docker-compose
+        -   autoconf
+        -   automake
+        # -   libpcsclite-dev
+        # -   pcscd
+        # -   pcsc-tools
+        # -   libccid
+
+-   name: Clone unofficial Linux driver
+    become: no
+    git:
+        repo: https://github.com/nns779/px4_drv
+        dest: git/px4_drv
+
+-   name: Build fwtool
+    make:
+        chdir: git/px4_drv/fwtool
+
+-   name: Fetch official driver
+    unarchive:
+        src: http://plex-net.co.jp/plex/pxw3u4/pxw3u4_BDA_ver1x64.zip
+        dest: git/px4_drv/fwtool
+        remote_src: yes
+
+-   name: Extract firmware
+    shell: ./fwtool ./pxw3u4_BDA_ver1x64/PXW3U4.sys it930x-firmware.bin
+    args:
+        chdir: git/px4_drv/fwtool
+
+-   name: Install firmware
+    become: yes
+    copy:
+        src: git/px4_drv/fwtool/it930x-firmware.bin
+        dest: /lib/firmware/
+        remote_src: yes
+
+-   name: Copy driver source
+    become: yes
+    copy:
+        src: git/px4_drv/
+        dest: /usr/src/px4_drv-0.2.1
+        remote_src: yes
+
+-   name: Check dkms
+    shell: dkms status | grep px4_drv
+    register: dkms_status
+
+-   name: Tell dkms
+    shell: dkms add px4_drv/0.2.1
+    when: dkms_status.rc != 0
+
+-   name: Install driver
+    become: yes
+    shell: dkms install px4_drv/0.2.1
+
+-   name: Clone recpt1
+    become: no
+    git:
+        repo: https://github.com/stz2012/recpt1.git
+        dest: git/recpt1
+
+-   name: Prepare built recpt1
+    shell: ./autogen.sh; ./configure --enable-b25
+    args:
+        chdir: git/recpt1/recpt1
+
+-   name: Build recpt1
+    make:
+        chdir: git/recpt1/recpt1
+
+-   name: Create mirakurun directory
+    become: yes
+    file:
+        path: '{{item}}'
+        state: directory
+    with_items:
+    -   /opt/mirakurun/run
+    -   /opt/mirakurun/opt
+    -   /opt/mirakurun/config
+    -   /opt/mirakurun/data
+
+-   name: Join docker group
+    user:
+        name: "{{lookup('env','USER')}}"
+        groups: docker
+        append: yes
+        state: present
+
+-   name: Clone docker config
+    become: no
+    git:
+        repo: https://github.com/l3tnun/docker-mirakurun-epgstation.git
+        dest: git/docker-mirakurun-epgstation
+
+
+-   name: Create mirakurun directory
+    file:
+        path: '{{item}}'
+        state: directory
+    with_items:
+    -   git/docker-mirakurun-epgstation/mirakurun/run
+    -   git/docker-mirakurun-epgstation/mirakurun/opt/bin
+
+
+-   name: Install recpt1
+    copy:
+        src: /usr/local/bin/recpt1
+        dest: git/docker-mirakurun-epgstation/mirakurun/opt/bin/recpt1
+        remote_src: yes
+
+-   name: Check confi state
+    stat:
+        path: git/docker-mirakurun-epgstation/docker-compose.yml
+    register: docker_config
+
+-   name: Copy default config
+    copy:
+        src: git/docker-mirakurun-epgstation/{{item.src}}
+        dest: git/docker-mirakurun-epgstation/{{item.dest}}
+        remote_src: yes
+    with_items:
+    -   {src: docker-compose-sample.yml, dest: docker-compose.yml}
+    -   {src: epgstation/config/enc.js.template, dest: epgstation/config/enc.js}
+    -   {src: epgstation/config/config.yml.template, dest: epgstation/config/config.yml}
+    -   {src: epgstation/config/operatorLogConfig.sample.yml, dest: epgstation/config/operatorLogConfig.yml}
+    -   {src: epgstation/config/epgUpdaterLogConfig.sample.yml, dest: epgstation/config/epgUpdaterLogConfig.yml}
+    -   {src: epgstation/config/serviceLogConfig.sample.yml, dest: epgstation/config/serviceLogConfig.yml}
+    when: not docker_config.stat.exists
+
+-   name: Configure mapping of device file
+    lineinfile:
+        path: git/docker-mirakurun-epgstation/docker-compose.yml
+        regexp: ^.*{{item.path}}
+        insertafter: '^        devices:'
+        line: '            - {{item.path}}:{{item.path}}'
+        state: '{{item.state}}'
+    with_items:
+    -   {path: /dev/px4video0, state: present}
+    -   {path: /dev/px4video1, state: present}
+    -   {path: /dev/px4video2, state: present}
+    -   {path: /dev/px4video3, state: present}
+    -   {path: /dev/px4video4, state: present}
+    -   {path: /dev/px4video5, state: present}
+    -   {path: /dev/px4video6, state: present}
+    -   {path: /dev/px4video7, state: present}
+    -   {path: /dev/dvb, state: absent}
+
+-   name: Configure storage mapping
+    lineinfile:
+        path: git/docker-mirakurun-epgstation/docker-compose.yml
+        regexp: ^.*{{item}}
+        insertafter: '^        volumes:'
+        line: '            - {{item}}'
+        state: present
+    with_items:
+    -   ./mirakurun/run:/var/run/
+    -   ./mirakurun/opt:/opt/
+
+-   name: Configure record directory
+    lineinfile:
+        path: git/docker-mirakurun-epgstation/docker-compose.yml
+        regexp: ^.*{{item.container}}
+        insertafter: '^        volumes:'
+        line: '            - {{item.host}}:{{item.container}}'
+        state: present
+    with_items:
+    -   {host: /storage/record, container: /app/recorded}
+
+-   name: Setup Mirakurun
+    shell: docker-compose run --rm -e SETUP=true mirakurun
+    args:
+        chdir: git/docker-mirakurun-epgstation
+
+-   name:
+    template:
+        src: mirakurun/{{item}}.j2
+        dest: git/docker-mirakurun-epgstation/mirakurun/conf/{{item}}
+    with_items:
+    -   tuners.yml
+    -   channels.yml
+
+# Local Variables:
+# mode: yaml
+# tab-width: 4
+# End:
