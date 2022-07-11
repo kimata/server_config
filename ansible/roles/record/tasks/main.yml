@@ -8,10 +8,6 @@
         -   docker-compose
         -   autoconf
         -   automake
-        -   libpcsclite-dev
-        -   pcsc-tools
-        -   libccid
-        # -   pcscd
 
 -   name: Clone unofficial Linux driver
     become: no
