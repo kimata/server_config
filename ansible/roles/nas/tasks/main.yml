@@ -1,56 +1,55 @@
-- name: Install Packages
-  apt:
-    pkg: [
-      'samba', 'zfsutils-linux',
-      'nfs-kernel-server', 'prometheus-node-exporter',
-      'zabbix-agent', 'nut-client', 'net-tools',
+-   name: Install Packages
+    apt:
+        pkg: [samba, zfsutils-linux, nfs-kernel-server, prometheus-node-exporter, zabbix-agent, nut-client, net-tools, e2fsprogs
       # 'plocate'
-    ]
-    state: present
+]
+        state: present
 
-- name: Setting Kernel Modules
-  lineinfile:
-    dest=/etc/modules-load.d/modules.conf
-    line={{ item }}
-  with_items:
-    - zfs
-    - acpi_ipmi
-  notify:
-    load kernel modules
+-   name: Setting Kernel Modules
+    lineinfile: dest=/etc/modules-load.d/modules.conf line={{ item }}
+    with_items:
+    -   zfs
+    -   acpi_ipmi
+    notify: load kernel modules
 
-- name: Setting ZFS Permission
-  file:
-    path=/dev/zfs owner=root group=sudo mode=0660
+-   name: Setting ZFS Permission
+    file: path=/dev/zfs owner=root group=sudo mode=0660
 
-- name: Setting ZED
-  replace:
-    dest=/etc/zfs/zed.d/zed.rc
-    regexp='^#ZED_NOTIFY_VERBOSE=0'
-    replace='ZED_NOTIFY_VERBOSE=1'
+-   name: Setting ZED
+    replace: dest=/etc/zfs/zed.d/zed.rc regexp='^#ZED_NOTIFY_VERBOSE=0' replace='ZED_NOTIFY_VERBOSE=1'
 
-- name: Create Mount Point
-  file:
-    path={{ item }} state=directory
-  with_items:
-    - /storage
-    - /backup
+-   name: Create Mount Point
+    file: path={{ item }} state=directory
+    with_items:
+    -   /storage
+    -   /backup
 
-- name: "Check if EFI firmaware path exists"
-  stat:
-    path: '/sys/firmware/efi'
-  register: efi
+-   name: Check if EFI firmaware path exists
+    stat:
+        path: /sys/firmware/efi
+    register: efi
 
-- name: Setting mount
-  template:
-    src=mount/fstab.j2 dest=/etc/fstab
-  notify:
-    reload mount
+-   name: Find root device
+    shell: findmnt --target / --output SOURCE | tail -n 1
+    register: root_device
 
-- name: Setting Samba
-  template:
-    src=samba/smb.conf.j2 dest=/etc/samba/smb.conf
-  notify:
-    restart samba
+-   name: Find boot device
+    shell: findmnt --target /boot --output SOURCE | tail -n 1
+    register: boot_device
+
+-   name: Label root devices
+    shell: e2label {{ item.device }} {{ item.name }}
+    with_items:
+    -   {device: '{{root_device.stdout}}', name: root}
+    -   {device: '{{boot_device.stdout}}', name: boot}
+
+-   name: Setting mount
+    template: src=mount/fstab.j2 dest=/etc/fstab
+    notify: reload mount
+
+-   name: Setting Samba
+    template: src=samba/smb.conf.j2 dest=/etc/samba/smb.conf
+    notify: restart samba
 
 # - name: Disable multipath
 #   blockinfile:
@@ -61,76 +60,70 @@
 #           devnode "^sd[a-z]"
 #       }
 
-- name: Setting Zabbix agent
-  lineinfile:
-    dest: '/etc/zabbix/zabbix_agentd.conf'
-    regexp: '{{item.regexp}}'
-    line: '{{item.line}}'
-  with_items:
-    - regexp: '^Server=.*$'
-      line: 'Server={{network.zabbix}}'
-    - regexp: '^ServerActive=.*$'
-      line: 'ServerActive={{network.zabbix}}'
-    - regexp: '^Include=.*$'
-      line: 'Include=/etc/zabbix/zabbix_agentd.conf.d/'
-  notify: restart zabbix agent
+-   name: Setting Zabbix agent
+    lineinfile:
+        dest: /etc/zabbix/zabbix_agentd.conf
+        regexp: '{{item.regexp}}'
+        line: '{{item.line}}'
+    with_items:
+    -   regexp: ^Server=.*$
+        line: Server={{network.zabbix}}
+    -   regexp: ^ServerActive=.*$
+        line: ServerActive={{network.zabbix}}
+    -   regexp: ^Include=.*$
+        line: Include=/etc/zabbix/zabbix_agentd.conf.d/
+    notify: restart zabbix agent
 
-- name: Install Zabbix userparameter for ZFS on Linux 
-  get_url:
-    url: 'https://raw.githubusercontent.com/Cosium/zabbix_zfs-on-linux/master/userparameters/ZoL_with_sudo.conf'
-    dest: '/etc/zabbix/zabbix_agentd.conf.d/'
-  notify: restart zabbix agent
+-   name: Install Zabbix userparameter for ZFS on Linux
+    get_url:
+        url: https://raw.githubusercontent.com/Cosium/zabbix_zfs-on-linux/master/userparameters/ZoL_with_sudo.conf
+        dest: /etc/zabbix/zabbix_agentd.conf.d/
+    notify: restart zabbix agent
 
-- name: Setting ZFS option
-  lineinfile:
-    dest: '/etc/modprobe.d/zfs.conf'
-    regexp: '^options zfs zfs_dmu_offset_next_sync=.*'
-    line: 'options zfs zfs_dmu_offset_next_sync=1'
-    create: yes
+-   name: Setting ZFS option
+    lineinfile:
+        dest: /etc/modprobe.d/zfs.conf
+        regexp: ^options zfs zfs_dmu_offset_next_sync=.*
+        line: options zfs zfs_dmu_offset_next_sync=1
+        create: yes
 
-- name: Allow any user to use read-only ZFS commands
-  blockinfile:
-    dest: /etc/sudoers.d/zfs
-    content: |
-      Cmnd_Alias C_ZFS = \
-        /sbin/zfs "", /sbin/zfs help *, \
-        /sbin/zfs get, /sbin/zfs get *, \
-        /sbin/zfs list, /sbin/zfs list *, \
-        /sbin/zpool "", /sbin/zpool help *, \
-        /sbin/zpool iostat, /sbin/zpool iostat *, \
-        /sbin/zpool list, /sbin/zpool list *, \
-        /sbin/zpool status, /sbin/zpool status *, \
-        /sbin/zpool upgrade, /sbin/zpool upgrade -v
-      ALL ALL = (root) NOPASSWD: C_ZFS
+-   name: Allow any user to use read-only ZFS commands
+    blockinfile:
+        dest: /etc/sudoers.d/zfs
+        content: |
+            Cmnd_Alias C_ZFS = \
+              /sbin/zfs "", /sbin/zfs help *, \
+              /sbin/zfs get, /sbin/zfs get *, \
+              /sbin/zfs list, /sbin/zfs list *, \
+              /sbin/zpool "", /sbin/zpool help *, \
+              /sbin/zpool iostat, /sbin/zpool iostat *, \
+              /sbin/zpool list, /sbin/zpool list *, \
+              /sbin/zpool status, /sbin/zpool status *, \
+              /sbin/zpool upgrade, /sbin/zpool upgrade -v
+            ALL ALL = (root) NOPASSWD: C_ZFS
 
-- name: Setting Postfix
-  lineinfile:
-    dest={{item.dest}}
-    regexp={{item.regexp}}
-    line={{item.line}}
-  with_items:
-    - { dest: '/etc/postfix/main.cf', regexp: '^relayhost =.*', line: 'relayhost = [{{network.mail}}.{{network.domain}}]' }
-    - { dest: '/etc/aliases', regexp: '^root:.*', line: "root: root@{{network.mail}}.{{network.domain}}" }
-  notify:
-    restart postfix
+-   name: Setting Postfix
+    lineinfile: dest={{item.dest}} regexp={{item.regexp}} line={{item.line}}
+    with_items:
+    -   {dest: /etc/postfix/main.cf, regexp: '^relayhost =.*', line: 'relayhost = [{{network.mail}}.{{network.domain}}]'}
+    -   {dest: /etc/aliases, regexp: '^root:.*', line: 'root: root@{{network.mail}}.{{network.domain}}'}
+    notify: restart postfix
 
-- name: Setting NUT - nut.conf
-  replace:
-    path: '/etc/nut/nut.conf'
-    regexp: '^#?MODE=.*'
-    replace: 'MODE=netclient'
+-   name: Setting NUT - nut.conf
+    replace:
+        path: /etc/nut/nut.conf
+        regexp: ^#?MODE=.*
+        replace: MODE=netclient
 
-- name: Setting NUT - upsmon.conf
-  blockinfile:
-    dest: '/etc/nut/upsmon.conf'
-    content: |
-      MONITOR {{ ups.nas }} 1 upsmon upspass master
-    insertbefore: EOF
-  notify: restart nut-client
+-   name: Setting NUT - upsmon.conf
+    blockinfile:
+        dest: /etc/nut/upsmon.conf
+        content: |
+            MONITOR {{ ups.nas }} 1 upsmon upspass master
+        insertbefore: EOF
+    notify: restart nut-client
 
 # Local Variables:
 # mode: yaml
 # tab-width: 4
 # End:
-
-
