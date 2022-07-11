@@ -193,6 +193,8 @@
             (when (executable-find "rust-analyzer")
               (setq rustic-lsp-server 'rust-analyzer))))
 
+(package-install 'dockerfile-mode)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; 補完
 (global-set-key (kbd "C-M-_") 'dabbrev-completion)
