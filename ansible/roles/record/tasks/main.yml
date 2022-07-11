@@ -8,10 +8,10 @@
         -   docker-compose
         -   autoconf
         -   automake
-        # -   libpcsclite-dev
+        -   libpcsclite-dev
+        -   pcsc-tools
+        -   libccid
         # -   pcscd
-        # -   pcsc-tools
-        # -   libccid
 
 -   name: Clone unofficial Linux driver
     become: no
@@ -75,17 +75,6 @@
     make:
         chdir: git/recpt1/recpt1
 
--   name: Create mirakurun directory
-    become: yes
-    file:
-        path: '{{item}}'
-        state: directory
-    with_items:
-    -   /opt/mirakurun/run
-    -   /opt/mirakurun/opt
-    -   /opt/mirakurun/config
-    -   /opt/mirakurun/data
-
 -   name: Join docker group
     user:
         name: "{{lookup('env','USER')}}"
@@ -109,13 +98,19 @@
     -   git/docker-mirakurun-epgstation/mirakurun/opt/bin
 
 
--   name: Install recpt1
-    copy:
-        src: /usr/local/bin/recpt1
-        dest: git/docker-mirakurun-epgstation/mirakurun/opt/bin/recpt1
-        remote_src: yes
+# NOTE: これは動かない．Docker 上でビルドしたものを使うようにする
+# -   name: Install recpt1
+#     copy:
+#         src: "/usr/local/bin/{{item}}"
+#         dest: "git/docker-mirakurun-epgstation/mirakurun/opt/bin/{{item}}"
+#         mode: '0755'
+#         remote_src: yes
+#     with_items:
+#       - checksignal
+#       - recpt1
+#       - recpt1ctl
 
--   name: Check confi state
+-   name: Check config state
     stat:
         path: git/docker-mirakurun-epgstation/docker-compose.yml
     register: docker_config
@@ -156,7 +151,7 @@
     lineinfile:
         path: git/docker-mirakurun-epgstation/docker-compose.yml
         regexp: ^.*{{item}}
-        insertafter: '^        volumes:'
+        insertbefore: '^        environment:'
         line: '            - {{item}}'
         state: present
     with_items:
@@ -173,18 +168,35 @@
     with_items:
     -   {host: /storage/record, container: /app/recorded}
 
+-   name: Setting startup script
+    template:
+        src: mirakurun/startup.j2
+        dest: git/docker-mirakurun-epgstation/mirakurun/opt/bin/startup
+
 -   name: Setup Mirakurun
     shell: docker-compose run --rm -e SETUP=true mirakurun
     args:
         chdir: git/docker-mirakurun-epgstation
 
--   name:
+-   name: Configure mirakurun
     template:
         src: mirakurun/{{item}}.j2
         dest: git/docker-mirakurun-epgstation/mirakurun/conf/{{item}}
     with_items:
     -   tuners.yml
     -   channels.yml
+
+-   name: Configure EPGStation
+    lineinfile:
+        path: git/docker-mirakurun-epgstation/epgstation/config/config.yml
+        regexp: ^.*{{item.key}}
+        line: '{{item.key}}: "{{item.value}}"'
+        state: present
+    with_items:
+    -   {key: recordedFormat, value: '%TITLE%_%SHORTYEAR%%MONTH%%DAY%_%HOUR%%MIN%'}
+    -   {key: recordedFileExtension, value: .ts}
+    -   {key: needToReplaceEnclosingCharacters, value: 'true'}
+    -   {key: thumbnail, value: '%ROOT%/thumb'}
 
 # Local Variables:
 # mode: yaml
