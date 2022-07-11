@@ -60,20 +60,20 @@
     become: yes
     shell: dkms install px4_drv/0.2.1
 
--   name: Clone recpt1
-    become: no
-    git:
-        repo: https://github.com/stz2012/recpt1.git
-        dest: git/recpt1
+# -   name: Clone recpt1
+#     become: no
+#     git:
+#         repo: https://github.com/epgdatacapbon/recpt1.git
+#         dest: git/recpt1
 
--   name: Prepare built recpt1
-    shell: ./autogen.sh; ./configure --enable-b25
-    args:
-        chdir: git/recpt1/recpt1
+# -   name: Prepare built recpt1
+#     shell: ./autogen.sh; ./configure --enable-b25
+#     args:
+#         chdir: git/recpt1/recpt1
 
--   name: Build recpt1
-    make:
-        chdir: git/recpt1/recpt1
+# -   name: Build recpt1
+#     make:
+#         chdir: git/recpt1/recpt1
 
 -   name: Join docker group
     user:
@@ -175,6 +175,11 @@
 
 -   name: Setup Mirakurun
     shell: docker-compose run --rm -e SETUP=true mirakurun
+    args:
+        chdir: git/docker-mirakurun-epgstation
+
+-   name: Build and install recpt1 in mirakurun container
+    shell: docker-compose run --rm -it mirakurun /opt/bin/startup
     args:
         chdir: git/docker-mirakurun-epgstation
 
