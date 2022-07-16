@@ -85,6 +85,15 @@
         dest: git/docker-mirakurun-epgstation
 
 
+-   name: Create mirakurun and MariaDB directory
+    file:
+        path: '{{item}}'
+        state: directory
+    with_items:
+    -   git/docker-mirakurun-epgstation/mirakurun/run
+    -   git/docker-mirakurun-epgstation/mirakurun/opt/bin
+    -   git/docker-mirakurun-epgstation/mysql/data
+
 -   name: Create mirakurun directory
     file:
         path: '{{item}}'
@@ -92,7 +101,6 @@
     with_items:
     -   git/docker-mirakurun-epgstation/mirakurun/run
     -   git/docker-mirakurun-epgstation/mirakurun/opt/bin
-
 
 # NOTE: これは動かない．Docker 上でビルドしたものを使うようにする
 # -   name: Install recpt1
@@ -154,7 +162,7 @@
     -   ./mirakurun/run:/var/run/
     -   ./mirakurun/opt:/opt/
 
--   name: Configure record directory
+-   name: Configure record and MariaDB directory
     lineinfile:
         path: git/docker-mirakurun-epgstation/docker-compose.yml
         regexp: ^.*{{item.container}}
@@ -163,6 +171,8 @@
         state: present
     with_items:
     -   {host: /storage/record, container: /app/recorded}
+    -   {host: /storage/record, container: /app/recorded}
+    -   {host: ./mysql/data, container: /var/lib/mysql}
 
 -   name: Setting startup script
     template:
