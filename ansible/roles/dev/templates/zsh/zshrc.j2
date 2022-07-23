@@ -26,10 +26,9 @@ zplug "zsh-users/zsh-syntax-highlighting", defer:2
 # ssh した時にウィンドウ名に接続先ホスト名を表示
 if [[ -n $TMUX_PANE  ]]; then
     function ssh() {
-        local name=$(tmux display -p '#{window_name}')
         tmux rename-window "ssh[${@:-1:1]}]" > /dev/null 2>&1
         command ssh "$@"
-        tmux rename-window "$name" > /dev/null 2>&1
+        tmux set-window-option automatic-rename "on" > /dev/null 2>&1
     }
 fi
 
