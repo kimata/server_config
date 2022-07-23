@@ -1,39 +1,35 @@
-- name: reload mount
-  mount:
-    name: mount -a
-    src: LABEL=root
-    fstype: ext4
-    state: present
+-   name: reload mount
+    shell: mount -a
 
-- name: load kernel modules
-  systemd:
-    name: systemd-modules-load
-    state: restarted
-    
-- name: restart samba
-  service: name=smbd state=restarted
+-   name: load kernel modules
+    systemd:
+        name: systemd-modules-load
+        state: restarted
 
-- name: restart hddtemp
-  service: name=hddtemp state=restarted
-  
-- name: restart apcupsd
-  service: name=apcupsd state=restarted
+-   name: restart samba
+    service: name=smbd state=restarted
 
-- name: restart zabbix agent
-  systemd:
-    name: zabbix-agent
-    state: restarted
+-   name: restart hddtemp
+    service: name=hddtemp state=restarted
 
-- name: restart postfix 1
-  systemd: name=ssh state=restarted
-  listen: restart postfix
+-   name: restart apcupsd
+    service: name=apcupsd state=restarted
 
-- name: restart postfix 2
-  shell: newaliases
-  listen: restart postfix
+-   name: restart zabbix agent
+    systemd:
+        name: zabbix-agent
+        state: restarted
 
-- name: restart nut-client
-  service: name=nut-client state=restarted
+-   name: restart postfix 1
+    systemd: name=ssh state=restarted
+    listen: restart postfix
+
+-   name: restart postfix 2
+    shell: newaliases
+    listen: restart postfix
+
+-   name: restart nut-client
+    service: name=nut-client state=restarted
 
 # Local Variables:
 # mode: yaml
