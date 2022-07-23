@@ -1,0 +1,35 @@
+-   name: Find root device
+    shell: findmnt --target / --output SOURCE | tail -n 1
+    register: root_device
+
+-   name: Label root devices
+    shell: e2label {{ root_device.stdout }} root
+
+-   name: Setting mount
+    template: src=mount/fstab.j2 dest=/etc/fstab
+    notify: reload mount
+
+-   name: Checking config file existence
+    become: no
+    stat:
+        path: "{{ lookup('env', 'HOME') }}/.kube/config"
+    register: kube_config
+
+-   name: Initialize Kubernetes
+    shell: "kubeadm init --control-plane-endpoint {{control_endpoint}}:6443 | tee $HOME/kubeadm_init.log"
+    when: not kube_config.stat.exists
+
+-   name: Copy config file
+    become: no
+    shell: |
+        mkdir -p $HOME/.kube
+        sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
+        sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+
+#   $HOME/.kube/config
+
+# - name: check if DB exists
+#   shell: mysql -uroot -p{{mysql_pass}} -e "SHOW DATABASES;" | grep zabbix
+#   register: db_exist
+#   failed_when: db_exist.rc == 2
