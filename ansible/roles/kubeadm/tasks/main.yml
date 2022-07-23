@@ -109,7 +109,7 @@
 
 -   name: Reboot
     reboot:
-        reboot_timeout: 180
+        reboot_timeout: 300
 
 # Local Variables:
 # mode: yaml
