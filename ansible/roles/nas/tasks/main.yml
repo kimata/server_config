@@ -1,8 +1,14 @@
 -   name: Install Packages
     apt:
-        pkg: [samba, zfsutils-linux, nfs-kernel-server, prometheus-node-exporter, zabbix-agent, nut-client, net-tools, e2fsprogs
-      # 'plocate'
-]
+        pkg:
+        -   samba
+        -   zfsutils-linux
+        -   nfs-kernel-server
+        -   prometheus-node-exporter
+        -   zabbix-agent
+        -   nut-client
+        -   net-tools
+        -   e2fsprogs
         state: present
 
 -   name: Setting Kernel Modules
