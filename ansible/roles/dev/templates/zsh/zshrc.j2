@@ -167,6 +167,136 @@ ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=215'
 ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=215'
 
 ################################################################################
+# kubernetes
+################################################################################
+if (which kubectl >& /dev/null) then
+   eval "$(kubectl completion zsh)"
+fi
+
+################################################################################w
+# エイリアス
+################################################################################
+if (which dircolors >& /dev/null) then	# dircolors
+   eval `dircolors ~/.dircolors`
+fi
+
+if (which exa >& /dev/null) then	    # ls
+    alias ls='exa --color=auto'
+elif (which gnuls >& /dev/null) then
+    alias ls='gnuls -F --color=auto'
+elif (uname | grep Linux >& /dev/null) then
+    alias ls='ls -F --color=auto'
+else
+    alias ls='ls -FG'
+fi
+
+if (which colordiff >& /dev/null) then	# diff
+    alias diff=colordiff
+fi
+
+for editor in emacs vim vi              # editor
+do
+  if (which $editor >& /dev/null) then
+      export EDITOR=$editor
+      break
+  fi
+done
+
+alias rm='nocorrect =rm -i'             # スペル訂正をしない
+alias mv='nocorrect =mv -i'
+alias cp='nocorrect =cp -i'
+
+alias keychain='keychain --nogui'       # keychain
+
+if [[ ($EMACS_VERSION > 22.9) && ($SUDO_USER != root) ]] then # emacs
+   emacs () {
+       emacsclient -c "$@" 2>/dev/null || (/usr/bin/emacs --daemon; emacsclient -c "$@")
+   }
+fi
+
+alias less='less -R'                    # less
+alias vi='vim'                          # vi
+
+alias ack='ack -group --color'          # ack
+alias nl='nl -ba'                       # nl
+alias df='df -h'                        # df
+
+alias bell='echo -ne "\a"'              # bell
+
+if [[ -n $TMUX_PANE  ]]; then           # reset
+    function reset() {
+        echo -ne "\eP\ec\e\\"
+        =reset
+        clear
+        tmux clear-history > /dev/null 2>&1
+        tmux set-window-option automatic-rename "on"
+    }
+else
+    function reset() {
+        echo -ne "\eP\ec\e\\"
+        =reset
+        clear
+    }
+fi
+
+alias reset='echo -ne "\eP\ec\e\\" && =reset && clear && tmux clear-history > /dev/null 2>&1 && tmux set-window-option automatic-rename "on" > /dev/null 2>&1' # rebbset
+alias lshw='lshw -disable scsi'         # lshw
+
+if (which duf >& /dev/null) then	    # df
+    alias df=duf
+fi
+
+################################################################################
+# グローバルエイリアス
+################################################################################
+alias -g L='|& less -R'
+alias -g G='|& grep'
+alias -g H='| head'
+alias -g C='| colordiff'
+alias -g T='| tail'
+alias -g S='| sort'
+alias -g A='| awk'
+alias -g W='| wc'
+
+alias -g O='2>&1'
+alias -g N='>/dev/null'
+alias -g NE='2>/dev/null'
+alias -g NB='>&/dev/null'
+
+alias -g P='| perl -pe "s/\e\[\d+(;\d+)?m//g" | col -bx'
+
+################################################################################
+# サフィックスエイリアス
+################################################################################
+if is-at-least 4.2; then
+    alias -s {tar.gz,tar.Z,tgz,tar,gz,zip,tar,bz2,tbz2,bz2,lzh,rar,Z,xz}='muncompress'
+fi
+
+muncompress () {
+    for file in "$@"
+      do
+      case $file in
+          *.tar.gz ) tar xzvf   $file ;;
+          *.tar.Z  ) tar xzvf   $file ;;
+          *.tgz    ) tar xzvf   $file ;;
+          *.tar    ) tar xvf    $file ;;
+          *.gz     ) gunzip     $file ;;
+          *.zip    ) unzip      $file ;;
+          *.tar.bz2) tar xjvf   $file ;;
+          *.tbz2   ) tar xjvf   $file ;;
+          *.bz2    ) bzip2 -d   $file ;;
+          *.lzh    ) lha x      $file ;;
+          *.rar    ) rar x      $file ;;
+          *.Z      ) uncompress $file ;;
+          *.xz     ) xz -d       $file ;;
+	      *)
+              echo "Can't decide how to uncompress $file."
+              ;;
+		esac
+	done
+}
+
+################################################################################
 # Keychain 等
 ################################################################################
 stty stop undef
