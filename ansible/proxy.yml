@@ -1,16 +1,14 @@
-- hosts: all
-  vars_files: 
-    - host_config.yml
+-   hosts: all
+    vars_files:
+    -   host_config.yml
 
-  become: yes
+    become: yes
 
-  roles:
-    - common
-    - proxy
+    roles:
+    -   common
+    -   proxy
+    -   mail
 
-  handlers:
+    handlers:
 
-  tasks:
-
-
-
+    tasks:
