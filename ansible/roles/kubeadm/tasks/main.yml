@@ -77,19 +77,40 @@
         line: fs.inotify.max_user_watches=100000
     notify: reload sysctl
 
--   name: Create containerd config
+-   name: Create containerd config directory
+    file:
+        path: /etc/containerd
+        state: directory
+        mode: '0755'
+
+-   name: Create containerd config file
     shell: containerd config default > /etc/containerd/config.toml
 
 -   name: Setting crictl endpoint
     shell: crictl config --set runtime-endpoint=unix:///run/containerd/containerd.sock --set image-endpoint=unix:///run/containerd/containerd.sock
 
-# NOTE: Ubuntu 22.04でkubeadmでKubernetesクラスターが動かない？
-# https://tech.virtualtech.jp/entry/2022/06/08/115030
--   name: Disable cgroup v2 and use cgroup v1
+-   name: Enable systemd cgroup
     lineinfile:
-        path: /etc/default/grub
-        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT'
-        line: 'GRUB_CMDLINE_LINUX_DEFAULT="systemd.unified_cgroup_hierarchy=false"'
+        path: /etc/containerd/config.toml
+        regexp: '{{item.regexp}}'
+        line: '{{item.line}}'
+        insertafter: '{{item.insertafter}}'
+    with_items:
+    -   regexp: '            SystemdCgroup = false'
+        line: '            SystemdCgroup = true'
+        insertafter: 'plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options'
+    -   regexp: 'endpoint = \["http://registry.green-rabbit.net"\]'
+        line: '          endpoint = ["http://registry.green-rabbit.net"]'
+        insertafter: '\[plugins."io.containerd.grpc.v1.cri".registry.mirrors\]'
+    -   regexp: '\[plugins."io.containerd.grpc.v1.cri".registry.mirrors."registry.green-rabbit.net"\]'
+        line: '        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."registry.green-rabbit.net"]'
+        insertafter: '\[plugins."io.containerd.grpc.v1.cri".registry.mirrors\]'
+    -   regexp: 'insecure_skip_verify = true'
+        line: '          insecure_skip_verify = true'
+        insertafter: '\[plugins."io.containerd.grpc.v1.cri".registry.configs\]'
+    -   regexp: '\[plugins."io.containerd.grpc.v1.cri".registry.configs."registry.green-rabbit.net".tls\]'
+        line: '        [plugins."io.containerd.grpc.v1.cri".registry.configs."registry.green-rabbit.net".tls]'
+        insertafter: '\[plugins."io.containerd.grpc.v1.cri".registry.configs\]'
 
 -   name: List old log files (1)
     find:
