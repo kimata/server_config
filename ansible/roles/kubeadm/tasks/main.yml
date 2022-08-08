@@ -112,6 +112,12 @@
         line: '        [plugins."io.containerd.grpc.v1.cri".registry.configs."registry.green-rabbit.net".tls]'
         insertafter: '\[plugins."io.containerd.grpc.v1.cri".registry.configs\]'
 
+
+-   name: Join docker group
+    user:
+        name: '{{ ansible_env.SUDO_USER }}'
+        groups: docker
+        append: yes
 -   name: Edit eviction threshold
     blockinfile:
         path: /var/lib/kubelet/config.yaml
