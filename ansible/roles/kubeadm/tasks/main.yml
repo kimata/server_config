@@ -62,12 +62,19 @@
 -   name: Setting Sysctl
     lineinfile:
         path: /etc/sysctl.conf
-        regexp: '^{{item}}.*'
-        line: '{{item}}=1'
+        regexp: '^{{item.regexp}}.*'
+        line: '{{item.line}}=1'
     with_items:
-    -   net.ipv4.ip_forward
-    -   net.bridge.bridge-nf-call-ip6tables
-    -   net.bridge.bridge-nf-call-iptables
+    -   regexp: net.ipv4.ip_forward
+        line: net.ipv4.ip_forward=1
+    -   regexp: net.bridge.bridge-nf-call-ip6table
+        line: net.bridge.bridge-nf-call-ip6table=1
+    -   regexp: net.bridge.bridge-nf-call-iptables
+        line: net.bridge.bridge-nf-call-iptables=1
+    -   regexp: fs.inotify.max_user_instances
+        line: fs.inotify.max_user_instances=100000
+    -   regexp: fs.inotify.max_user_watches
+        line: fs.inotify.max_user_watches=100000
     notify: reload sysctl
 
 -   name: Create containerd config
