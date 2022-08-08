@@ -47,7 +47,7 @@
 
 -   name: Setting kernel module
     lineinfile:
-        path: /etc/modules-load.d/k8s.conf
+        path: /etc/modules-load.d/kubenetes.conf
         line: "{{item}}"
         create: yes
     with_items:
