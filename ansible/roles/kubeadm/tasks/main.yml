@@ -96,9 +96,9 @@
     shell: update-grub
 
 
--   name: Reboot
-    reboot:
-        reboot_timeout: 300
+# -   name: Reboot
+#     reboot:
+#         reboot_timeout: 300
 
 # Local Variables:
 # mode: yaml
