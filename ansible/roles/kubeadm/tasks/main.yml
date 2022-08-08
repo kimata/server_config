@@ -5,28 +5,6 @@
         -   ca-certificates
         -   curl
 
--   name: Check /etc/fatab
-    shell: cat /etc/fstab | grep -q Ansible
-    register: fstab_edited_by_ansible
-    failed_when: fstab_edited_by_ansible.rc > 1
-
--   name: Find root device
-    shell: findmnt --target / --output SOURCE | tail -n 1
-    register: root_device
-    when: fstab_edited_by_ansible.rc != 0
-
--   name: Label root devices
-    shell: e2label {{ root_device.stdout }} root
-    when: fstab_edited_by_ansible.rc != 0
-
--   name: Setting mount
-    template: src=mount/fstab.j2 dest=/etc/fstab
-    notify: reload mount
-    when: fstab_edited_by_ansible.rc != 0
-
--   name: Disable swap
-    shell: swapoff -a
-
 -   name: Install Docker public signing key
     shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 
