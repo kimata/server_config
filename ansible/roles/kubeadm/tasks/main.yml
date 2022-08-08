@@ -112,6 +112,18 @@
         line: '        [plugins."io.containerd.grpc.v1.cri".registry.configs."registry.green-rabbit.net".tls]'
         insertafter: '\[plugins."io.containerd.grpc.v1.cri".registry.configs\]'
 
+-   name: Edit eviction threshold
+    blockinfile:
+        path: /var/lib/kubelet/config.yaml
+        block: |
+            evictionHard:
+              imagefs.available: "2%"
+              nodefs.available: "1%"
+    # NOTE: このファイルが存在しない場合，まだ kubeadm init や join 前で，それらを実行すると
+    # 上書きされてしまうものの，ここでコケると不便なので，とりあえず作成する．
+        create: yes
+    when: "'raspi' in ansible_kernel"
+
 -   name: List old log files (1)
     find:
         paths: /var/log
