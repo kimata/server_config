@@ -29,7 +29,8 @@
 -   name: Install containerd Kubernetes Packages
     apt:
         pkg:
-        -   containerd.io
+        -   docker.io
+        -   containerd
         -   kubelet
         -   kubeadm
         -   kubectl
